@@ -1,0 +1,21 @@
+{
+  "name": "mypetmanager",
+  "version": "1.0.0",
+  "description": "Website Repo holding frontend and backend for MyPetManager, a CS4800 group project.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cs4800-01-s25/MyPetManager.git"
+  },
+  "keywords": [],
+  "author": "Gian David Marquez",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/cs4800-01-s25/MyPetManager/issues"
+  },
+  "homepage": "https://github.com/cs4800-01-s25/MyPetManager#readme"
+}

@@ -1,5 +1,5 @@
 # MyPetManager by Cache Me If You Can
-Website Repo holding frontend and backend for MyPetManager, a CS4800 grou[ project.
+Website Repo holding frontend and backend for MyPetManager, a CS4800 group project.
 
 This is the main repository for our project and our current team members by last name are:
 
@@ -54,31 +54,21 @@ Fourth invoke the command to install dependencies:
 
 `npm install`
 
-You will notice a `node_modules` folder -- even in the top-level folder -- where the dependencies live. We need to keep in mind that a team project is group effort and other contributor's environments -- especially architecture, file, and operating systems -- most likely differ from yours. Therefore certain files are specified in the top-level `.gitignore` file to keep system specific files and folders from polluting the repository. The most common `.gitignore` for this project is:
-
-```
-.DS_Store
-node_modules/
-```
-
-The `node_modules` folder usually varies among contributors' machines because of architecture and should **not** be committed to the repository!
-
-You may need to invoke further commands to correct vulnerabilities if installed packages have updates. For example, if the output displays `2 vulnerabilities (1 moderate, 1 critical)`, invoke
-
-`npm audit fix`
-
-to address them. Sometimes even that fails and you may need to invoke
-
-`npm update`
-
-to get the required versions. Please remember to do this periodically to ensure that your environment remains up-to-date.
-
 At this point you are still in the top-level folder and should have the most recent files. Please refer to the next section for developer notes.
 
 ## Developer Notes
 
+`npm test`
+
+This calls the `test` script that will call a simple HTTP server. We will use the `Ctrl` and `C` key stroke to send a termination signal to server hosted on a port on your local machine.
+
+
+
+<!--
 We assume that you are in the `MyPetManager` top-level folder in a separate terminal session where you'll be able to monitor standard out as the backend and frontend run. The following `npm` command will run them concurrently:
 
 `npm start`
 
 This calls the `start` script within each workspace. For now we will use the `Ctrl` and `C` key stroke to send a termination signal to the backend and frontend servers.
+
+!-->
