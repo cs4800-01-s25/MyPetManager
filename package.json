@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "description": "Website Repo holding frontend and backend for MyPetManager, a CS4800 group project.",
   "main": "index.js",
+  "workspaces": [
+    "React"
+  ],
   "scripts": {
-    "test": "node index.js"
+    "test": "node index.js",
+    "stop": "npm stop --workspaces",
+    "react_test": "npm stop --workspaces"
   },
   "repository": {
     "type": "git",
@@ -17,5 +22,11 @@
   "bugs": {
     "url": "https://github.com/cs4800-01-s25/MyPetManager/issues"
   },
-  "homepage": "https://github.com/cs4800-01-s25/MyPetManager#readme"
+  "homepage": "https://github.com/cs4800-01-s25/MyPetManager#readme",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
 }
