@@ -17,5 +17,9 @@
   "bugs": {
     "url": "https://github.com/cs4800-01-s25/MyPetManager/issues"
   },
-  "homepage": "https://github.com/cs4800-01-s25/MyPetManager#readme"
+  "homepage": "https://github.com/cs4800-01-s25/MyPetManager#readme",
+  "dependencies": {
+    "express": "^4.21.2",
+    "fs-extra": "^11.3.0"
+  }
 }
