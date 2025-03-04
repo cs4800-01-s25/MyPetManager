@@ -1,74 +1,70 @@
-# MyPetManager by Cache Me If You Can
-Website Repo holding frontend and backend for MyPetManager, a CS4800 group project.
+# Getting Started with Create React App
 
-This is the main repository for our project and our current team members by last name are:
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-```
-Cheyenne Chavis
-Gian David Marquez
-My Lien Tan
-Brandon Vo
-```
+## Available Scripts
 
-<!-- We can add this later. -->
-<!--
-## Table of Contents
--->
+In the project directory, you can run:
 
-## Prep Your Development Environment
+### `npm start`
 
-Let's make sure that Node.js is installed before coloning the repository.
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-### Clone Repo and Check Dependencies
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-This project requires Node.js (Node) and we assume you already have it installed. We will now walk you through cloning this repository and make sure that all of its dependencies are installed on your local machine.
+### `npm test`
 
-This guide assumes you have git(https://git-scm.com/) downloaded
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-Our code is organized under the `MyPetManager` folder as its top-level container. The following examples keep all repositories under the `cs4800website` folder.
+### `npm run build`
 
-Hence the file structure for this current system guide is`C:\4800website\MyPetManager`
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-First browse to the parent folder where you want `MyPetManager` to be in your file system. On the command line:
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-`cs4800website` 
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-Second invoke the command `git` to clone this repository:
+### `npm run eject`
 
-`git clone https://github.com/cs4800-01-s25/MyPetManager.git`
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-Third verify that your commit name and email are correct:
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-`git config --list | grep user.`
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-The relevant information should appear like this if your email address is aliased for privacy:
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-```
-user.name=First Last
-user.email=username@users.noreply.github.com
-```
+## Learn More
 
-There are `npm` commands to install dependencies, whose versions specified in a `package.json` file, and to run the frontend and backend packages.
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-Fourth invoke the command to install dependencies:
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-`npm install`
+### Code Splitting
 
-At this point you are still in the top-level folder and should have the most recent files. Please refer to the next section for developer notes.
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-## Developer Notes
+### Analyzing the Bundle Size
 
-`npm test`
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-This calls the `test` script that will call a simple HTTP server. We will use the `Ctrl` and `C` key stroke to send a termination signal to server hosted on a port on your local machine.
+### Making a Progressive Web App
 
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
+### Advanced Configuration
 
-<!--
-We assume that you are in the `MyPetManager` top-level folder in a separate terminal session where you'll be able to monitor standard out as the backend and frontend run. The following `npm` command will run them concurrently:
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-`npm start`
+### Deployment
 
-This calls the `start` script within each workspace. For now we will use the `Ctrl` and `C` key stroke to send a termination signal to the backend and frontend servers.
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-!-->
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
