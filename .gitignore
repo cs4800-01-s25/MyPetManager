@@ -1,0 +1,8 @@
+# dependencies
+/node_modules
+
+# System 
+.DS_Store 
+
+# prcoess environment for db and such
+.env 
