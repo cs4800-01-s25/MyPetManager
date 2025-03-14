@@ -1,14 +1,35 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import App from './App';
 
-test('renders welcome message', () => {
+test('adds an appointment when Schedule button is clicked', () => {
   render(<App />);
-  const headingElement = screen.getByText(/Hello, MyPetManager!/i);
-  expect(headingElement).toBeInTheDocument();
+  
+  const scheduleButton = screen.getByTestId('schedule-btn');
+  fireEvent.click(scheduleButton);
+  
+  const appointmentItem = screen.getByTestId('appointment-0');
+  expect(appointmentItem).toHaveTextContent('Vet Visit');
 });
 
-test('renders pet management text', () => {
+test('adds a reminder when Reminder button is clicked', () => {
   render(<App />);
-  const textElement = screen.getByText(/Welcome to the pet management system./i);
-  expect(textElement).toBeInTheDocument();
+  
+  const reminderButton = screen.getByTestId('reminder-btn');
+  fireEvent.click(reminderButton);
+  
+  const reminderItem = screen.getByTestId('reminder-0');
+  expect(reminderItem).toHaveTextContent('Vaccination Due');
 });
+
+test('renders empty appointment list initially', () => {
+  render(<App />);
+  const appointmentList = screen.getByTestId('appointment-list');
+  expect(appointmentList.children.length).toBe(0);
+});
+
+test('renders empty reminder list initially', () => {
+  render(<App />);
+  const reminderList = screen.getByTestId('reminder-list');
+  expect(reminderList.children.length).toBe(0);
+});
+
