@@ -14,7 +14,7 @@ const App = () => {
       </header>
 
       {/* Section 1: Health Portal */}
-      <section className="features">
+      <section className="features" id="healthportal" data-testid="healthportal">
         <div className="feature-card pastel-pink">
           <a href="#healthportal">
             <div className="feature-number">01</div>
@@ -24,7 +24,7 @@ const App = () => {
         </div>
 
         {/* Section 2: Scheduler */}
-        <div className="feature-card pastel-blue" id="scheduler">
+        <div className="feature-card pastel-blue" id="scheduler" data-testid="scheduler">
           <div className="feature-number">02</div>
           <a href="#scheduler">
             <h2>Scheduler</h2>
@@ -33,7 +33,7 @@ const App = () => {
         </div>
 
         {/* Section 3: Forum page */}
-        <div className="feature-card pastel-yellow" id="forum">
+        <div className="feature-card pastel-yellow" id="forum" data-testid="forum">
           <div className="feature-number">03</div>
           <a href="#forum">
             <h2>Bonus</h2>
