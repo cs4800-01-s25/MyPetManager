@@ -23,7 +23,7 @@ Let's make sure that Node.js is installed before coloning the repository.
 
 This project requires Node.js (Node) and we assume you already have it installed. We will now walk you through cloning this repository and make sure that all of its dependencies are installed on your local machine.
 
-This guide assumes you have git(https://git-scm.com/) downloaded
+This guide assumes you have [git](https://git-scm.com/) downloaded
 
 Our code is organized under the `MyPetManager` folder as its top-level container. The following examples keep all repositories under the `cs4800website` folder.
 
@@ -60,7 +60,7 @@ At this point you are still in the top-level folder and should have the most rec
 
 `npm test`
 
-This calls the `test` script that will call a simple HTTP server. We will use the `Ctrl` and `C` key stroke to send a termination signal to server hosted on a port on your local machine.
+This calls the `test` script that will call the development scrips for both the backend and frontend. We will use the `Ctrl` and `C` key stroke to send a termination signal to server hosted on a port on your local machine.
 
 
 

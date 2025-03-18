@@ -19,7 +19,7 @@ function App() {
               <Link to="/" style={{ color: '#5A7184', fontWeight: 'bold' }}>Home</Link>
             </li>
             <li>
-              <Link to="/about" style={{ color: '#5A7184', fontWeight: 'bold' }}>Log In</Link>
+              <Link to="/log-in" style={{ color: '#5A7184', fontWeight: 'bold' }}>Log In</Link>
             </li>
           </ul>
         </nav>

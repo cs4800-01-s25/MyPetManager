@@ -17,7 +17,21 @@
     "url": "git+https://github.com/cs4800-01-s25/MyPetManager.git"
   },
   "keywords": [],
-  "author": "Gian David Marquez",
+  "author": "Contributors",
+  "contributors": [
+    {
+      "name": "Cheyenne Chavis"
+    },
+    {
+      "name": "Gian David Marquez"
+    },
+    {
+      "name": "My Lien Tan"
+    },
+    {
+      "name": "Brandon Vo"
+    }
+  ],
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
