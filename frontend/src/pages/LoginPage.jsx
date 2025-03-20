@@ -37,36 +37,24 @@ const LoginPage = () => {
       console.log("Login attempt with:", formData.email);
       console.log("Password logged:", formData.password);
       
-      // TODO: Replace with actual API call
-      // Example:
-      // const response = await fetch('/api/login', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(formData)
-      // });
-      // 
-      // if (!response.ok) throw new Error('Login failed');
-      // const data = await response.json();
-      // 
-      // Handle successful login:
-      // - Store authentication token
-      // - Redirect to dashboard/home
-      // - Update global auth state if using context
-    
-      // For demo purposes - remove this in production
-      if (formData.email === "test@example.com" && formData.password === "password") {
-        console.log("Login successful!");
-        // Redirect would happen here
-      } else {
-        setError("Invalid credentials");
-      }
-    } catch (err) {
-      console.error("Login error:", err);
-      setError(err.message || "Login failed. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+      const response = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData)
+    });
+
+    if (!response.ok) throw new Error("Invalid credentials");
+
+    const data = await response.json();
+    console.log("Login successful!", data);
+
+  } catch (err) {
+    console.error("Login error:", err);
+    setError(err.message || "Login failed. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="login-container">
