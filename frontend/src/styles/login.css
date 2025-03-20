@@ -1,0 +1,140 @@
+/* src/styles/login.css */
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 60px);
+    /* Adjust based on your navbar height */
+    background-color: #fefaf5;
+    /* Matching the color from index.css */
+    padding: 2rem;
+}
+
+.login-card {
+    background: linear-gradient(135deg, #FFDFDF, #C9E4FF);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 420px;
+    padding: 2rem;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-header h2 {
+    color: #333;
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.login-header p {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #444;
+}
+
+.form-group input {
+    padding: 12px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #C9E4FF;
+    box-shadow: 0 0 0 3px rgba(201, 228, 255, 0.3);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+}
+
+.remember-me {
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.forgot-password {
+    color: #5A7184;
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.login-button {
+    margin-top: 1.5rem;
+    padding: 12px;
+    background-color: #5A7184;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.login-button:hover {
+    background-color: #4a6073;
+}
+
+.login-button:disabled {
+    background-color: #a9b6c2;
+    cursor: not-allowed;
+}
+
+.login-footer {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.register-link {
+    color: #5A7184;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.register-link:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    padding: 0.75rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+}
