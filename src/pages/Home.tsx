@@ -18,7 +18,7 @@ const valuesData = [
   {
     title: "Security & Privacy",
     image: "/pet-care-data-model-1.png",
-    description: "Your pet's data is safe with us",
+    description: "We prioritize the privacy of our users and are committed to ensuring that your pet's data will be safe with us.",
   },
   {
     title: "Community",
@@ -50,11 +50,13 @@ export const Home = () => {
       pet-loving community — all in one place.
     </p>
 
-    <Button className="mt-10 h-[60px] w-[190px] bg-[#7c5c42] rounded-full shadow-inner-shadow-100">
-      <span className="text-[22px] font-['Poltawski_Nowy',Helvetica] font-bold text-white leading-[26px]">
-        Get Started
-      </span>
-    </Button>
+    <a href="/pet-profile">
+      <Button className="mt-10 h-[60px] w-[190px] bg-[#7c5c42] rounded-full shadow-inner-shadow-100">
+        <span className="text-[22px] font-['Poltawski_Nowy',Helvetica] font-bold text-white leading-[26px]">
+          Get Started
+        </span>
+      </Button>
+    </a>
   </div>
 </section>
 
@@ -107,7 +109,9 @@ export const Home = () => {
       </h2>
 
       <p className="opacity-70 font-['Poppins',Helvetica] text-[#222222] text-[18px] leading-[28px] max-w-[400px]">
-        My Pet Manager is more than just a website – it’s your all-in-one solution for keeping your pet’s health, appointments, and daily needs organized. From tracking vaccinations and vet visits to setting reminders for feeding and grooming, we ensure that managing your pet’s care is effortless. Because every pet deserves the best care, and every owner deserves peace of mind.
+        My Pet Manager is more than just a website – it’s your all-in-one solution for keeping your pet’s health, appointments, and daily needs organized. 
+        From tracking vaccinations and vet visits to setting reminders for feeding and grooming, we ensure that managing your pet’s care is effortless. 
+        Because every pet deserves the best care, and every owner deserves peace of mind.
       </p>
     </div>
 
@@ -127,17 +131,18 @@ export const Home = () => {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[26px]">
-          {/* Values Cards */}
+          {/* Values Cards (Simplicity, Compassion, Security & Privacy*/}
           {valuesData.slice(0, 3).map((value, index) => (
             <Card
               key={index}
               className={`w-full ${
-                index === 0 ? "h-[533px]" : "h-[293px]"
+                index === 0 ? "h-[500px]" : "h-[400px]"
               } bg-white rounded-[10px] flex flex-col p-10 pb-6`}
             >
               <Button
                 variant="outline"
-                className="rounded-[50px] border border-solid border-[#222222] px-[35px] py-[15px]"
+                className="rounded-[50px] border border-solid border-[#222222] px-[35px] py-[15px] mb-1"
+                disabled
               >
                 <span className="font-body-text-1 text-black text-center whitespace-nowrap">
                   {value.title}
@@ -145,25 +150,26 @@ export const Home = () => {
               </Button>
 
               <CardContent className="p-0 relative">
+              <p className="font-paragraph-1 text-black mt-4">
+                  {value.description}
+                </p>
                 {value.image && (
                   <img
-                    className="w-[223px] h-[132px] mt-[67px]"
+                    className="w-[223px] h-[172px] mt-[10px]"
                     alt={value.title}
                     src={value.image}
                   />
                 )}
-                <p className="font-paragraph-1 text-black mt-4">
-                  {value.description}
-                </p>
               </CardContent>
             </Card>
           ))}
 
           {/* Community Card */}
-          <Card className="w-full md:col-span-2 h-[210px] bg-white rounded-[10px] flex flex-col p-10 pb-6">
+          <Card className="w-full md:col-span-2 h-[250px] bg-white rounded-[10px] flex flex-col p-10 pb-6">
             <Button
               variant="outline"
-              className="rounded-[50px] border border-solid border-[#222222] px-[35px] py-[15px]"
+              className="rounded-[50px] border border-solid border-[#222222] px-[35px] py-[15px] mb-6"
+              disabled
             >
               <span className="font-body-text-1 text-black text-center whitespace-nowrap">
                 Community
@@ -171,12 +177,12 @@ export const Home = () => {
             </Button>
 
             <CardContent className="p-0 flex justify-between items-center">
-              <p className="font-paragraph-1 text-black max-w-[445px] mt-[65px]">
+              <p className="font-paragraph-1 text-black max-w-[445px] mt-[-50px]">
                 {valuesData[3].description}
               </p>
 
               <img
-                className="w-[223px] h-[146px] object-cover"
+                className="w-[244px] h-[140px] object-cover"
                 alt="Depositphotos"
                 src={valuesData[3].image}
               />
