@@ -5,6 +5,8 @@ import { RootLayout } from "./layouts/RootLayout";
 import { Home } from "./pages/Home";
 import { PetProfile } from "./pages/PetProfile";
 import { HealthPortal } from "./pages/HealthPortal";
+import { LoginPage } from "./pages/LoginPage"
+
 
 const router = createBrowserRouter([
   {
@@ -18,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: "/health-portal",
     element: <RootLayout><HealthPortal /></RootLayout>,
+  },
+  {
+    path: "/login",
+    element: <RootLayout><LoginPage /></RootLayout>,
   },
 ]);
 
