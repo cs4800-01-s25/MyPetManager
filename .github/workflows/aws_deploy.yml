@@ -1,0 +1,37 @@
+# This workflow will deploy to EC2 when there is a push to the "production" branch
+name: Deploy to Frontend on EC2
+
+on:
+  push:
+    branches: [ "production" ]
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Setup SSH key and known hosts
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+    - name: SSH into EC2 and Deploy
+      run: |
+        ssh ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+          cd /home/ubuntu/MyPetManagerApp/frontend
+          git pull origin production
+          npm ci
+          npm run build
+          sudo rm -rf /data/www/*
+          sudo cp -r dist/* /data/www/
+          sudo chown -R www-data:www-data /data/www
+          sudo chmod -R 755 /data/www
+          sudo nginx -t && sudo systemctl reload nginx
+        EOF
