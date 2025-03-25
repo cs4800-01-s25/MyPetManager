@@ -123,71 +123,72 @@ export const Home = () => {
     
   </div>
 </section>
-
       {/* Our Values Section */}
-      <section className="w-full max-w-[1440px] py-[120px] px-[100px] bg-[#e8e1d9]">
-        <h2 className="font-['Poltawski_Nowy',Helvetica] font-normal text-black text-6xl text-center mb-16">
+       <section className="w-full max-w-[1440px] py-16 bg-[#e8e1d9] mt-32">
+        <h2 className="text-center text-[48px] font-['Poltawski_Nowy',Helvetica] font-normal text-black mb-16">
           Our Values
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[26px]">
-          {/* Values Cards (Simplicity, Compassion, Security & Privacy*/}
-          {valuesData.slice(0, 3).map((value, index) => (
-            <Card
-              key={index}
-              className={`w-full ${
-                index === 0 ? "h-[500px]" : "h-[400px]"
-              } bg-white rounded-[10px] flex flex-col p-10 pb-6`}
-            >
-              <Button
-                variant="outline"
-                className="rounded-[50px] border border-solid border-[#222222] px-[35px] py-[15px] mb-1"
-                disabled
-              >
-                <span className="font-body-text-1 text-black text-center whitespace-nowrap">
-                  {value.title}
-                </span>
-              </Button>
-
-              <CardContent className="p-0 relative">
-              <p className="font-paragraph-1 text-black mt-4">
-                  {value.description}
-                </p>
-                {value.image && (
-                  <img
-                    className="w-[223px] h-[172px] mt-[10px]"
-                    alt={value.title}
-                    src={value.image}
-                  />
-                )}
-              </CardContent>
-            </Card>
-          ))}
-
-          {/* Community Card */}
-          <Card className="w-full md:col-span-2 h-[250px] bg-white rounded-[10px] flex flex-col p-10 pb-6">
-            <Button
-              variant="outline"
-              className="rounded-[50px] border border-solid border-[#222222] px-[35px] py-[15px] mb-6"
-              disabled
-            >
-              <span className="font-body-text-1 text-black text-center whitespace-nowrap">
-                Community
-              </span>
-            </Button>
-
-            <CardContent className="p-0 flex justify-between items-center">
-              <p className="font-paragraph-1 text-black max-w-[445px] mt-[-50px]">
-                {valuesData[3].description}
-              </p>
-
+        <div className="max-w-[1200px] mx-auto px-8">
+          <div className="grid grid-cols-2 gap-6">
+            {/* Left Column */}
+            <Card className="bg-white p-6 rounded-xl">
+              <div className="inline-block px-6 py-2 rounded-full border border-black mb-6">
+                Convenience
+              </div>
               <img
-                className="w-[244px] h-[140px] object-cover"
-                alt="Depositphotos"
-                src={valuesData[3].image}
+                src="/little-dog-as-a-vet-wearing-robe-and-stethoscope---isolated-over.png"
+                alt="Convenience"
+                className="w-full h-[400px] object-cover mb-6"
               />
-            </CardContent>
-          </Card>
+              <p className="text-sm leading-relaxed">
+                We make pet care effortless by providing a centralized platform to track appointments, vaccinations, and health records - all in one place.
+              </p>
+            </Card>
+
+            {/* Right Column */}
+            <div className="space-y-6">
+              <div className="grid grid-cols-2 gap-6">
+                {/* Compassion */}
+                <Card className="bg-white p-6 rounded-xl">
+                  <div className="inline-block px-6 py-2 rounded-full border border-black mb-6">
+                    Compassion
+                  </div>
+                  <p className="text-sm leading-relaxed">
+                    We believe every pet deserves love, attention, and personalized care. Our platform ensures pet owners can manage their pet's well-being with ease and empathy.
+                  </p>
+                </Card>
+
+                {/* Security & Privacy */}
+                <Card className="bg-white p-6 rounded-xl">
+                  <div className="inline-block px-6 py-2 rounded-full border border-black mb-6">
+                    Security & Privacy
+                  </div>
+                  <img
+                    src="/pet-care-data-model-1.png"
+                    alt="Security"
+                    className="w-full h-[120px] object-cover mb-6"
+                  />
+                  <p className="text-sm leading-relaxed">Your pet's data is safe with us</p>
+                </Card>
+              </div>
+
+              {/* Community */}
+              <Card className="bg-white p-6 rounded-xl">
+                <div className="inline-block px-6 py-2 rounded-full border border-black mb-6">
+                  Community
+                </div>
+                <p className="text-sm leading-relaxed mb-6">
+                  We connect pet owners with a network of caregivers, veterinarians, and fellow pet lovers to foster a strong, supportive pet care community.
+                </p>
+                <img
+                  src="/depositphotos-151564708-l-2015-1030x675-1.png"
+                  alt="Community"
+                  className="w-full h-[200px] object-cover"
+                />
+              </Card>
+            </div>
+          </div>
         </div>
       </section>
 
