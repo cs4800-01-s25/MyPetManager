@@ -50,7 +50,7 @@ export const Home = () => {
       pet-loving community — all in one place.
     </p>
 
-    <a href="/pet-profile">
+    <a href="/signup">
       <Button className="mt-10 h-[60px] w-[190px] bg-[#7c5c42] rounded-full shadow-inner-shadow-100">
         <span className="text-[22px] font-['Poltawski_Nowy',Helvetica] font-bold text-white leading-[26px]">
           Get Started

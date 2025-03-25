@@ -25,6 +25,9 @@ jobs:
     - name: SSH into EC2 and Deploy
       run: |
         ssh ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+          export NVM_DIR=/home/${{ secrets.SSH_USERNAME }}/.nvm
+          source /home/${{ secrets.SSH_USERNAME }}/.nvm/nvm.sh
+          
           cd ~/MyPetManagerApp/frontend
           git pull origin production
           npm ci
