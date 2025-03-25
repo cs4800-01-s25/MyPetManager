@@ -8,7 +8,7 @@ const navItems = [
   { label: "My Pet Profile", href: "/pet-profile" },
   { label: "Health Portal", href: "/health-portal" },
   { label: "Schedule Appointment", href: "#" },
-  { label: "Join our Community", href: "" },
+  { label: "Join our Community", href: "/signup" },
 ];
 
 export const RootLayout = ({ children }: { children: React.ReactNode }) => {

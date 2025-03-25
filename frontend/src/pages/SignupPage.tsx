@@ -5,14 +5,18 @@ import { Input } from "../components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "../components/ui/card";
 
 interface FormData {
+  fullName: string;
   email: string;
   password: string;
+  confirmPassword: string;
 }
 
-export const LoginPage = () => {
+export const SignupPage = () => {
   const [formData, setFormData] = useState<FormData>({
+    fullName: "",
     email: "",
-    password: ""
+    password: "",
+    confirmPassword: ""
   });
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -30,29 +34,39 @@ export const LoginPage = () => {
   // Form submission handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate password match
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+    
     setLoading(true);
     setError("");
     
     try {
-      // For now, just log the data
-      console.log("Form submitted!");
-      console.log("Login attempt with:", formData.email);
+      console.log("Sign up form submitted!");
+      console.log("Signup attempt for:", formData.email);
       
-      const response = await fetch("/api/login", {
+      const response = await fetch("/api/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          email: formData.email,
+          password: formData.password
+        })
       });
 
-      if (!response.ok) throw new Error("Invalid credentials");
+      if (!response.ok) throw new Error("Registration failed");
 
       const data = await response.json();
-      console.log("Login successful!", data);
+      console.log("Signup successful!", data);
       // You could redirect here using React Router
 
     } catch (err: any) {
-      console.error("Login error:", err);
-      setError(err.message || "Login failed. Please try again.");
+      console.error("Signup error:", err);
+      setError(err.message || "Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -62,9 +76,9 @@ export const LoginPage = () => {
     <div className="max-w-[1440px] mx-auto px-4 py-16 flex justify-center items-center min-h-[calc(100vh-102px-389px)]">
       <Card className="w-full max-w-md bg-white shadow-shadow">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-3xl font-['Poltawski_Nowy',Helvetica] text-center">Welcome Back</CardTitle>
+          <CardTitle className="text-3xl font-['Poltawski_Nowy',Helvetica] text-center">Join Our Community</CardTitle>
           <CardDescription className="text-center font-paragraph-2">
-            Sign in to access your pet care dashboard
+            Create an account to manage your pet's health and connect with other pet owners
           </CardDescription>
         </CardHeader>
         
@@ -76,6 +90,22 @@ export const LoginPage = () => {
           )}
           
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="fullName" className="font-paragraph-2 text-sm font-medium">
+                Full Name
+              </label>
+              <Input
+                id="fullName"
+                name="fullName"
+                type="text"
+                value={formData.fullName}
+                onChange={handleChange}
+                placeholder="Enter your full name"
+                required
+                className="w-full"
+              />
+            </div>
+            
             <div className="space-y-2">
               <label htmlFor="email" className="font-paragraph-2 text-sm font-medium">
                 Email Address
@@ -102,27 +132,38 @@ export const LoginPage = () => {
                 type="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Enter your password"
+                placeholder="Create a password"
                 required
                 className="w-full"
               />
             </div>
             
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="remember"
-                  className="rounded border-gray-300 text-brown focus:ring-brown"
-                />
-                <label htmlFor="remember" className="font-paragraph-2 text-sm">
-                  Remember me
-                </label>
-              </div>
-              
-              <Link to="/forgot-password" className="font-paragraph-2 text-sm text-brown hover:underline">
-                Forgot Password?
-              </Link>
+            <div className="space-y-2">
+              <label htmlFor="confirmPassword" className="font-paragraph-2 text-sm font-medium">
+                Confirm Password
+              </label>
+              <Input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Confirm your password"
+                required
+                className="w-full"
+              />
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="terms"
+                required
+                className="rounded border-gray-300 text-brown focus:ring-brown"
+              />
+              <label htmlFor="terms" className="font-paragraph-2 text-sm">
+                I agree to the <Link to="/terms" className="text-brown hover:underline">Terms of Service</Link> and <Link to="/privacy" className="text-brown hover:underline">Privacy Policy</Link>
+              </label>
             </div>
             
             <Button
@@ -131,7 +172,7 @@ export const LoginPage = () => {
               className="w-full h-[50px] bg-[#7c5c42] hover:bg-[#6a4f38] rounded-full font-['Poltawski_Nowy',Helvetica] transition-colors duration-200"
             >
               <span className="text-lg font-bold text-white">
-                {loading ? "Signing in..." : "Sign In"}
+                {loading ? "Creating Account..." : "Sign Up"}
               </span>
             </Button>
           </form>
@@ -139,9 +180,9 @@ export const LoginPage = () => {
         
         <CardFooter className="flex justify-center">
           <p className="font-paragraph-2 text-sm text-center">
-            Don't have an account?{" "}
-            <Link to="/signup" className="text-brown hover:underline font-semibold">
-              Sign up
+            Already have an account?{" "}
+            <Link to="/login" className="text-brown hover:underline font-semibold">
+              Sign in
             </Link>
           </p>
         </CardFooter>
@@ -150,4 +191,4 @@ export const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SignupPage;
