@@ -25,7 +25,7 @@ jobs:
     - name: SSH into EC2 and Deploy
       run: |
         ssh ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
-          cd /home/ubuntu/MyPetManagerApp/frontend
+          cd ~/MyPetManagerApp/frontend
           git pull origin production
           npm ci
           npm run build
@@ -33,5 +33,6 @@ jobs:
           sudo cp -r dist/* /data/www/
           sudo chown -R www-data:www-data /data/www
           sudo chmod -R 755 /data/www
-          sudo nginx -t && sudo systemctl reload nginx
+          sudo nginx -t
+          sudo systemctl reload nginx
         EOF
