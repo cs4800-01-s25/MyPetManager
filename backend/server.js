@@ -1,21 +1,16 @@
 /**
  * @file This will define the TEST entry point
- * @authorS
+ * @authors Gian David Marquez and Chey C.
  */
 
-// Example from nodejs.org
-// Ideally package.json would concurrently run backend and the frontend
-// This is just a test on trying a simple server and starting through 'npm start'
-// Looking back, I needed the express.js to simplify routing
-// This index.js is typically also named app.js
-
-
 // Define requirements;
+require("dotenv").config();
 const express = require( "express" );
-const domain = "localhost";
-const port = 4350;
-const appName = "TEST";
 
+const { pool } = require("./configs/database.js");
+const domain = process.env.DOMAIN || "localhost";
+const port = process.env.PORT || 4350;
+const appName = "TEST";
 const app = express();
 
 // add ctrl C to escape
@@ -33,7 +28,29 @@ app.get('/', (req, res) => {
   res.send('Hello World EXPRESS');
 });
 
+// Add middleware for parsing JSON and URL-encoded data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+// Example database route
+app.get('/test-db', async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT 1 as test');
+    res.json({ 
+      success: true, 
+      message: 'Database connection successful', 
+      data: rows 
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: 'Database connection failed', 
+      error: error.message 
+    });
+  }
+});
+
+// listen and start
 var server = app.listen(port, domain, () => {
   console.log(`Server running express at http://${domain}:${port}/`);
 });
