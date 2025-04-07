@@ -7,4 +7,5 @@ frontend/node_modules/
 .DS_Store 
 
 # prcoess environment for db and such
-.env 
+backend/.env
+database/seed.sql
