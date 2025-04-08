@@ -8,3 +8,4 @@ frontend/node_modules/
 
 # prcoess environment for db and such
 .env 
+node_modules
