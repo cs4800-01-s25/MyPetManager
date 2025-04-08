@@ -1,0 +1,44 @@
+{
+  "name": "mypetmanager",
+  "version": "1.0.0",
+  "description": "Website Repo holding frontend and backend for MyPetManager, a CS4800 group project.",
+  "main": "index.js",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "start": "concurrently --kill-others \"npm run start -w backend\" \"npm run build -w frontend\"",
+    "stop": "npm stop --workspaces",
+    "test": "concurrently --kill-others \"npm run dev -w backend\" \"npm run dev -w frontend\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cs4800-01-s25/MyPetManager.git"
+  },
+  "keywords": [],
+  "author": "Contributors",
+  "contributors": [
+    {
+      "name": "Cheyenne C."
+    },
+    {
+      "name": "Gian David Marquez"
+    },
+    {
+      "name": "My Lien T."
+    },
+    {
+      "name": "Brandon V."
+    }
+  ],
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/cs4800-01-s25/MyPetManager/issues"
+  },
+  "homepage": "https://github.com/cs4800-01-s25/MyPetManager#readme",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
+import { SearchIcon } from "lucide-react";
 
 // Navigation menu items data
 const navItems = [
@@ -8,7 +9,7 @@ const navItems = [
   { label: "My Pet Profile", href: "/pet-profile" },
   { label: "Health Portal", href: "/health-portal" },
   { label: "Schedule Appointment", href: "#" },
-  { label: "Join our Community", href: "/signup" },
+  { label: "Join our Community", href: "/signup" }, // from "updated upstream"
 ];
 
 export const RootLayout = ({ children }: { children: React.ReactNode }) => {
@@ -42,13 +43,25 @@ export const RootLayout = ({ children }: { children: React.ReactNode }) => {
             ))}
           </nav>
 
-          <Link to="/login">
-            <Button 
-              className="px-5 py-3 bg-[#7c5c42] hover:bg-[#6a4f38] text-white rounded-2xl transition-colors font-paragraph-2"
-            >
-              Login
-            </Button>
-          </Link>
+          {/* Right-side area: search + login button */}
+          <div className="flex items-center gap-4">
+            {/* Search bar (from stashed changes) */}
+            <div className="flex items-center justify-center gap-2 px-5 py-3 bg-[#edf3fb] rounded-2xl border-[0.5px] border-solid border-[#e8e1da]">
+              <span className="opacity-50 font-paragraph-2 text-[#222222] text-center whitespace-nowrap">
+                SearchIcon
+              </span>
+              <SearchIcon className="w-4 h-4" />
+            </div>
+
+            {/* Login button (from updated upstream) */}
+            <Link to="/login">
+              <Button
+                className="px-5 py-3 bg-[#7c5c42] hover:bg-[#6a4f38] text-white rounded-2xl transition-colors font-paragraph-2"
+              >
+                Login
+              </Button>
+            </Link>
+          </div>
         </div>
       </header>
 
