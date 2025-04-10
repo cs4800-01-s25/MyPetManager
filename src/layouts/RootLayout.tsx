@@ -1,5 +1,5 @@
 import React from "react";
-import { SearchIcon } from "lucide-react";
+import { LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 
 // Navigation menu items data
@@ -41,13 +41,14 @@ export const RootLayout = ({ children }: { children: React.ReactNode }) => {
               </Link>
             ))}
           </nav>
-
-          <div className="flex items-center justify-center gap-2 px-5 py-3 bg-[#edf3fb] rounded-2xl border-[0.5px] border-solid border-[#e8e1da]">
-            <span className="opacity-50 font-paragraph-2 text-[#222222] text-center whitespace-nowrap">
-              SearchIcon
-            </span>
-            <SearchIcon className="w-4 h-4" />
-          </div>
+          <button>
+            <div className="flex items-center justify-center gap-2 px-5 py-3 bg-[#edf3fb] rounded-2xl border-[0.5px] border-solid border-[#e8e1da]">
+              <span className="opacity-50 font-paragraph-2 text-[#222222] text-center whitespace-nowrap">
+                Login
+              </span>
+              <LogIn className="w-4 h-4" />
+            </div>
+          </button>
         </div>
       </header>
 
