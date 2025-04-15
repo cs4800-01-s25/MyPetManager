@@ -1,6 +1,8 @@
 /**
  * @file This will define the TEST entry point
  * @authors Gian David Marquez and Chey C.
+ * 
+ * TODO: Bcrypt uses old packages, therefore is a security risk. 
  */
 
 // Define requirements;
