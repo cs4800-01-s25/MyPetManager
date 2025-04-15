@@ -9,3 +9,5 @@ frontend/node_modules/
 # prcoess environment for db and such
 backend/.env
 database/seed.sql
+.env 
+node_modules
