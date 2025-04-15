@@ -36,8 +36,9 @@ async function createUser(user) {
  * @returns {Promise<object|null>} A promise that resolves to the user object if found, otherwise null.
  */
 async function findUserByEmail(email) {
+    console.log("findUserByEmail called");
     try {
-        const [rows] = await pool.query(`SELECT * FROM ${TABLE_NAME} WHERE email = ?`, [email]);
+        const [rows] = await pool.query(`SELECT * FROM ${TABLE_NAME} WHERE EmailAddress = ?`, [email]);
         return rows.length > 0 ? rows[0] : null; // Return the first user found or null if none found
     } catch (error) {
         console.error("Error finding user by email:", error);

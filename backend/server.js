@@ -7,7 +7,6 @@
 
 // Define requirements;
 require("dotenv").config();
-const { pool } = require("./configs/db.config");
 const domain = process.env.DOMAIN || "localhost";
 const port = process.env.PORT || 4350;
 
@@ -16,18 +15,39 @@ const express = require("express");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+const {
+  createUser,
+  findUserByEmail,
+  findUserById,
+  updatePassword,
+} = require("./models/user.model");
 // 2) Basic config
 const appName = "TEST";
 const JWT_SECRET = "super_secret_key"; // In production, hide this in env vars
+// create minecraft players
+const whitelist = [
+  'http://localhost:5173', // local frontend
+  'http://mypetmanager.xyz' // http unsecured domain
+]
 
 // 3) Create Express App
 const app = express();
 
 // 4) Middleware
-// - CORS so your React frontend at http://localhost:5173 can call the API
+// CORS options with origin check
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || whitelist.includes(origin)) {
+      // Allow requests with no origin (e.g., Postman) or whitelisted origin
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true // Allow cookies if needed
+};
 // - JSON body parsing so we can read req.body
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // 5) In-memory user store (demo only!)
@@ -66,25 +86,28 @@ app.post("/api/auth/register", async (req, res) => {
 // LOGIN
 app.post("/api/auth/login", async (req, res) => {
   try {
-    const { username, password } = req.body;
+    // input from client 
+    const { email, password } = req.body;
+    console.log("SERVER.JS: Login Attempt username: ", email);
 
-    // Find user
-    const user = users.find((u) => u.username === username);
+    // Find user in the database 
+    const user = await findUserByEmail(email);
     if (!user) {
       return res.status(401).json({ error: "Invalid username or password" });
     }
+    console.log("SERVER.JS: User fetched from the database: ", user);
 
-    // Compare password
+    // Compare password in the database 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ error: "Invalid username or password" });
     }
-
+    console.log("SERVER.JS: Bcypt password matched?: ", isMatch);
     // Create JWT
-    const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: "1h" });
-
+    const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "1h" });
     // Send token
-    res.json({ token });
+    console.log("Sucessful Login!")
+    return res.json({ token });
   } catch (err) {
     console.error("Login error:", err);
     res.status(500).json({ error: "Server error" });
