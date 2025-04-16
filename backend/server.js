@@ -1,39 +1,38 @@
 /**
- * @file This will define the TEST entry point
+ * @file This will define the backend server that I'll be using for the project.
  * @authors Gian David Marquez and Chey C.
  * 
- * TODO: Bcrypt uses old packages, therefore is a security risk. 
+ * branch comments:
+ * 1) Right now the server is only running a local memory for users and passwords.
+ *   In the future I will be using a database to store the users and passwords.
+ * 2) The important part is we implemented some kind of hashing 
+ * and that the login and signup POST routes were tested with POSTMAN.
+ * 
+ * 3) TODO: 
+ *  - Implement JWT for authentication 
+ *  - Implement a database to store users and passwords
+ *  - Implement a login session with cookies
  */
 
 // Define requirements;
 require("dotenv").config();
-const domain = process.env.DOMAIN || "localhost";
-const port = process.env.PORT || 4350;
+const domain = process.env.BACKEND_DOMAIN;
+const port = process.env.BACKEND_PORT;
 
 // 1) Import required packages
 const express = require("express");
 const cors = require("cors");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const {
-  createUser,
-  findUserByEmail,
-  findUserById,
-  updatePassword,
-} = require("./models/user.model");
+const argon2 = require("argon2");
+
 // 2) Basic config
-const appName = "TEST";
-const JWT_SECRET = "super_secret_key"; // In production, hide this in env vars
-// create minecraft players
+const app = express();
+const appName = "Backend Express";
+// create minecraft players to let in
 const whitelist = [
   'http://localhost:5173', // local frontend
   'http://mypetmanager.xyz' // http unsecured domain
 ]
 
-// 3) Create Express App
-const app = express();
-
-// 4) Middleware
 // CORS options with origin check
 const corsOptions = {
   origin: function (origin, callback) {
@@ -46,95 +45,64 @@ const corsOptions = {
   },
   credentials: true // Allow cookies if needed
 };
+
 // - JSON body parsing so we can read req.body
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // for form data
 
-// 5) In-memory user store (demo only!)
+// 5) TODO: JWT Secret key
+  
+/**
+ * Fake database for intial testing purposes, will start as empty
+ */
 const users = [];
-
-// 6) Basic route - Hello World
+// 6) Basic route
 app.get("/", (req, res) => {
-  res.send("Hello World EXPRESS");
+  res.send("Express Server is running!");
 });
 
 // 7) Auth Routes
-
-// REGISTER
-app.post("/api/auth/register", async (req, res) => {
+app.post("/signup", async (req, res) => {
+  const { email, password } = req.body;
   try {
-    const { username, password } = req.body;
+    // Hash the password using argon2
+    const hashedPassword = await argon2.hash(password);
 
-    // Check if user already exists
-    const existingUser = users.find((u) => u.username === username);
-    if (existingUser) {
-      return res.status(400).json({ error: "User already exists" });
-    }
-
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create and store the user
-    users.push({ username, password: hashedPassword });
-    res.status(201).json({ message: "User registered successfully" });
-  } catch (err) {
-    console.error("Register error:", err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-// LOGIN
-app.post("/api/auth/login", async (req, res) => {
-  try {
-    // input from client 
-    const { email, password } = req.body;
-    console.log("SERVER.JS: Login Attempt username: ", email);
-
-    // Find user in the database 
-    const user = await findUserByEmail(email);
-    if (!user) {
-      return res.status(401).json({ error: "Invalid username or password" });
-    }
-    console.log("SERVER.JS: User fetched from the database: ", user);
-
-    // Compare password in the database 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ error: "Invalid username or password" });
-    }
-    console.log("SERVER.JS: Bcypt password matched?: ", isMatch);
-    // Create JWT
-    const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "1h" });
-    // Send token
-    console.log("Sucessful Login!")
-    return res.json({ token });
-  } catch (err) {
-    console.error("Login error:", err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-// PROTECTED example: GET /api/protected
-app.get("/api/protected", (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).json({ error: "No token provided" });
-  }
-
-  // If the header is "Bearer <token>", split out the token
-  const token = authHeader.split(" ")[1];
-
-  // Verify token
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ error: "Invalid token" });
-    }
-    // If valid, we have decoded info
-    res.json({
-      message: `Protected route accessed by ${decoded.username}`,
+    // Store the user in the fake database
+    users.push({
+      email,
+      password: hashedPassword,
     });
-  });
+    console.log(users); // check all users
+    res.status(200).json({ message: "User created successfully" });
+  } catch (error) {
+    res.status(500);
+  }
 });
+
+app.post("/login", async (req, res) => {
+    const  { email, password } = req.body;
+    // find user
+    const user = users.find((user) => user.email === email);
+    // error 
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    
+    // verify password
+    try {
+      if (await argon2.verify(user.password, password)) {
+        // send cookie or JWT
+        return res.status(200).json({ message: "Login sucessful" }); // Password match
+      } else {
+        return res.status(400).json({message: "Invalid Login"}) // Invalid password/email combination
+      }
+    } catch (error) {
+        console.log("ERROR" + error); // log error 
+        return res.status(500) // Internal server error
+    }
+})
 
 // Graceful shutdown on Ctrl+C
 process.on("SIGINT", () => {
@@ -145,14 +113,6 @@ process.on("SIGINT", () => {
   process.exitCode = 0;
 });
 
-// Example of HTTP GET / REQUEST
-app.get('/', (req, res) => {
-  res.send('Hello World EXPRESS');
-});
-
-// Add middleware for parsing JSON and URL-encoded data
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 // listen and start
 // Start server
