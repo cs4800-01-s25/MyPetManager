@@ -30,20 +30,19 @@ export const LoginPage = () => {
   // Form submission handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError("");
     
     try {
       // For now, just log the data
       console.log("Form submitted!");
       console.log("Login attempt with:", formData.email);
-      
-      const response = await fetch("/api/login", {
+
+      setLoading(true);
+      const response = await fetch("http://localhost:4350/api/auth/login", { 
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData) // this structured as email: nextline password
       });
-
       if (!response.ok) throw new Error("Invalid credentials");
 
       const data = await response.json();

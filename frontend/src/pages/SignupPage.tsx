@@ -5,7 +5,7 @@ import { Input } from "../components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "../components/ui/card";
 
 interface FormData {
-  fullName: string;
+  //fullName: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -13,7 +13,7 @@ interface FormData {
 
 export const SignupPage = () => {
   const [formData, setFormData] = useState<FormData>({
-    fullName: "",
+    //fullName: "",
     email: "",
     password: "",
     confirmPassword: ""
@@ -48,11 +48,11 @@ export const SignupPage = () => {
       console.log("Sign up form submitted!");
       console.log("Signup attempt for:", formData.email);
       
-      const response = await fetch("/api/signup", {
+      const response = await fetch("http://localhost:4350/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          fullName: formData.fullName,
+          //fullName: formData.fullName,
           email: formData.email,
           password: formData.password
         })
@@ -90,22 +90,6 @@ export const SignupPage = () => {
           )}
           
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <label htmlFor="fullName" className="font-paragraph-2 text-sm font-medium">
-                Full Name
-              </label>
-              <Input
-                id="fullName"
-                name="fullName"
-                type="text"
-                value={formData.fullName}
-                onChange={handleChange}
-                placeholder="Enter your full name"
-                required
-                className="w-full"
-              />
-            </div>
-            
             <div className="space-y-2">
               <label htmlFor="email" className="font-paragraph-2 text-sm font-medium">
                 Email Address
