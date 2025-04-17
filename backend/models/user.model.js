@@ -22,9 +22,13 @@ const PRIMARY_KEY = "user_id"; // The primary key for the users table
  */
 async function createUser(user) {
     try {
-        const [result] = await pool.query(`INSERT INTO ${TABLE_NAME} SET ?`, user); // Insert the user object into the database
-        return { ...user, [PRIMARY_KEY]: result.insertId }; // Return the created user object with the generated ID
-    } catch (error) {
+        const [result] = await pool.query(`
+            INSERT INTO ${TABLE_NAME} (EmailAddress, password)
+            vALUES (?, ?)
+        `, [user.EmailAddress, user.password]); // Insert the new user into the database
+        const newUserId = result.insertId; // Get the ID of the newly created user
+    }
+    catch (error) {
         console.error("Error creating user:", error);
         throw error; // Rethrow the error for further handling
     }

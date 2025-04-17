@@ -6,8 +6,9 @@ CREATE TABLE users (
     UserType ENUM('PetOwner', 'Admin') NOT NULL,
     FirstName VARCHAR(25),
     LastName VARCHAR(25),
-    EmailAddress VARCHAR(50) UNIQUE NOT NULL, 
-    Pass VARCHAR(100) NOT NULL 
+    EmailAddress VARCHAR(255) UNIQUE NOT NULL, 
+    password VARCHAR(250) NOT NULL,
+    CreatedAt TIMESTAMP NOT NULL DEFAULT NOW()
 );
 CREATE TABLE admins (
     AdminID INT AUTO_INCREMENT PRIMARY KEY, 

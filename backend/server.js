@@ -23,6 +23,11 @@ const port = process.env.BACKEND_PORT;
 const express = require("express");
 const cors = require("cors");
 const argon2 = require("argon2");
+// import user functions for database
+const {
+  createUser,
+  findUserByEmail,
+} = require("./models/userModel.js");
 
 // 2) Basic config
 const app = express();
@@ -53,10 +58,6 @@ app.use(express.urlencoded({ extended: true })); // for form data
 
 // 5) TODO: JWT Secret key
   
-/**
- * Fake database for intial testing purposes, will start as empty
- */
-const users = [];
 // 6) Basic route
 app.get("/", (req, res) => {
   res.send("Express Server is running!");
@@ -69,12 +70,9 @@ app.post("/signup", async (req, res) => {
     // Hash the password using argon2
     const hashedPassword = await argon2.hash(password);
 
-    // Store the user in the fake database
-    users.push({
-      email,
-      password: hashedPassword,
-    });
-    console.log(users); // check all users
+    // Store the user in the database
+    createUser(email, hashedPassword);
+
     res.status(200).json({ message: "User created successfully" });
   } catch (error) {
     res.status(500);
