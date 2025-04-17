@@ -22,12 +22,10 @@ const PRIMARY_KEY = "user_id"; // The primary key for the users table
  */
 async function createUser(email, hashedPassword) {
     try {
-        const [result] = await pool.query(
-          `
+        const [result] = await pool.query(`
             INSERT INTO ${TABLE_NAME} (EmailAddress, password)
             VALUES (?, ?)
-        `,
-          [email, hashedPassword]
+        `,[email, hashedPassword]
         ); // Insert the new user into the database
         console.log("new User at: " + result.insertId)  // Get the ID of the newly created user
     }
@@ -43,9 +41,14 @@ async function createUser(email, hashedPassword) {
  * @returns {Promise<object|null>} A promise that resolves to the user object if found, otherwise null.
  */
 async function findUserByEmail(email) {
-    console.log("findUserByEmail called");
+    console.log("findUserByEmail called: " + email);
     try {
-        const [rows] = await pool.query(`SELECT * FROM ${TABLE_NAME} WHERE EmailAddress = ?`, [email]);
+        const [rows] = await pool.query(`
+            SELECT * 
+            FROM ${TABLE_NAME} 
+            WHERE EmailAddress = ?
+            `, [email]);
+           // console.log("finderUserByEmail rows: ", rows)
         return rows.length > 0 ? rows[0] : null; // Return the first user found or null if none found
     } catch (error) {
         console.error("Error finding user by email:", error);

@@ -3,14 +3,12 @@
  * @authors Gian David Marquez and Chey C.
  * 
  * branch comments:
- * 1) Right now the server is only running a local memory for users and passwords.
- *   In the future I will be using a database to store the users and passwords.
+ * 1) Right now the server is only running a database to store the users and passwords.
  * 2) The important part is we implemented some kind of hashing 
- * and that the login and signup POST routes were tested with POSTMAN.
+ * and that the login and signup POST routes were tested.
  * 
- * 3) TODO: 
+ * TODO: 
  *  - Implement JWT for authentication 
- *  - Implement a database to store users and passwords
  *  - Implement a login session with cookies
  */
 
@@ -81,27 +79,37 @@ app.post("/api/auth/signup", async (req, res) => {
   }
 });
 
-app.post("/login", async (req, res) => {
-    const  { email, password } = req.body;
-    // find user
-    const user = users.find((user) => user.email === email);
-    // error 
-    if (!user) {
-      return res.status(400).json({ message: "User not found" });
-    }
-    
-    // verify password
-    try {
-      if (await argon2.verify(user.password, password)) {
-        // send cookie or JWT
-        return res.status(200).json({ message: "Login sucessful" }); // Password match
-      } else {
-        return res.status(400).json({message: "Invalid Login"}) // Invalid password/email combination
-      }
-    } catch (error) {
-        console.log("ERROR" + error); // log error 
-        return res.status(500) // Internal server error
-    }
+app.post("/api/auth/login", async (req, res) => {
+  const { email, password } = req.body;
+    console.log("Server: user submitted email: " + email);
+    console.log("Server: user submitted password: " + password);
+
+  // find user 
+  const user = await findUserByEmail(email);
+   if (!user) {
+    console.log("-----User not Found---")
+     return res.status(400).json({ message: "User not found" });
+   }
+  console.log("Server: Found user sucessful\n Attempting Login.");
+
+   // verify password
+   try {
+     if (await argon2.verify(user.password, password)) {
+       // send cookie or JWT
+       console.log("User has logged in with credentials: ");
+       console.log("email: " + user.EmailAddress);
+       console.log("password: " + user.password)
+
+       // add logic to intiate logged-in status
+       return res.status(200).json({ message: "Login sucessful" }); // Password match
+     } else {
+      console.log("bad login")
+       return res.status(400).json({ message: "Invalid Login" }); // Invalid password/email combination
+     }
+   } catch (error) {
+     console.log("ERROR" + error); // log error
+     return res.status(500); // Internal server error
+   }
 })
 
 // listen and start
