@@ -20,13 +20,16 @@ const PRIMARY_KEY = "user_id"; // The primary key for the users table
  * @param {object} user - The user object containing user details.
  * @returns {Promise<object>} A promise that resolves to the created user object.
  */
-async function createUser(user) {
+async function createUser(email, hashedPassword) {
     try {
-        const [result] = await pool.query(`
+        const [result] = await pool.query(
+          `
             INSERT INTO ${TABLE_NAME} (EmailAddress, password)
-            vALUES (?, ?)
-        `, [user.EmailAddress, user.password]); // Insert the new user into the database
-        const newUserId = result.insertId; // Get the ID of the newly created user
+            VALUES (?, ?)
+        `,
+          [email, hashedPassword]
+        ); // Insert the new user into the database
+        console.log("new User at: " + result.insertId)  // Get the ID of the newly created user
     }
     catch (error) {
         console.error("Error creating user:", error);

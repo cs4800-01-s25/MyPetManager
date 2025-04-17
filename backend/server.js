@@ -27,7 +27,7 @@ const argon2 = require("argon2");
 const {
   createUser,
   findUserByEmail,
-} = require("./models/userModel.js");
+} = require("./models/user.model.js");
 
 // 2) Basic config
 const app = express();
@@ -64,18 +64,20 @@ app.get("/", (req, res) => {
 });
 
 // 7) Auth Routes
-app.post("/signup", async (req, res) => {
+app.post("/api/auth/signup", async (req, res) => {
   const { email, password } = req.body;
+  // check if user exists 
+
+  // if not keep going
   try {
     // Hash the password using argon2
     const hashedPassword = await argon2.hash(password);
-
+    console.log(hashedPassword)
     // Store the user in the database
     createUser(email, hashedPassword);
-
     res.status(200).json({ message: "User created successfully" });
   } catch (error) {
-    res.status(500);
+    res.json({ message: "User creation failed" });
   }
 });
 
@@ -101,16 +103,6 @@ app.post("/login", async (req, res) => {
         return res.status(500) // Internal server error
     }
 })
-
-// Graceful shutdown on Ctrl+C
-process.on("SIGINT", () => {
-  console.log("SIGINT");
-  server.close(() => {
-    console.log(`The ${appName} server will stop now.`);
-  });
-  process.exitCode = 0;
-});
-
 
 // listen and start
 // Start server
