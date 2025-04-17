@@ -7,6 +7,7 @@ import { PetProfile } from "./pages/PetProfile";
 import { HealthPortal } from "./pages/HealthPortal";
 import { LoginPage } from "./pages/LoginPage"
 import { SignupPage } from "./pages/SignupPage"
+import { Scheduler } from "./pages/Scheduler"
 
 
 const router = createBrowserRouter([
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <RootLayout><SignupPage /></RootLayout>,
+  },
+  {
+    path: "/schedule",
+    element: <RootLayout><Scheduler /></RootLayout>,
   }
 ]);
 
