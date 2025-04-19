@@ -19,6 +19,7 @@ interface Pet {
 
 interface Insurance {
   company: string;
+  companyUrl: string;
   expirationDate: string;
   policyNumber: string;
 }
@@ -30,8 +31,8 @@ const initialPets: Pet[] = [
     species: "Bobtail Cat",
     age: 2,
     vaccinations: [
-      { name: "FVRCP", date: "2/24/23" },
-      { name: "Rabies", date: "4/28/24" },
+      { name: "FVRCP", date: "2023-02-24" },
+      { name: "Rabies", date: "2024-04-28" },
     ],
     medications: [
       { name: "Atopica", dosage: "1x daily" },
@@ -43,8 +44,8 @@ const initialPets: Pet[] = [
     species: "Pug",
     age: 4,
     vaccinations: [
-      { name: "DA2PP", date: "1/2/22" },
-      { name: "Rabies", date: "10/16/24" },
+      { name: "DA2PP", date: "2022-01-02" },
+      { name: "Rabies", date: "2024-10-16" },
     ],
     medications: [
       { name: "Apoquel", dosage: "1x daily" },
@@ -56,7 +57,8 @@ const initialPets: Pet[] = [
 // Initial insurance data
 const insurance: Insurance = {
   company: "Lemonade",
-  expirationDate: "3/3/27",
+  companyUrl: "https://www.lemonade.com/",
+  expirationDate: "2027-03-03",
   policyNumber: "31271402",
 };
 
@@ -69,6 +71,39 @@ export const HealthPortal = () => {
   const [medicationDosage, setMedicationDosage] = useState("");
   const [showInsuranceFields, setShowInsuranceFields] = useState<boolean>(false);
   const [newInsurance, setInsurance] = useState<Insurance>(insurance);
+
+  const [profilePicture, setprofilePicture] = useState<string | null>(null);
+  const [petImages, setPetImages] = useState<Record<string, string>>({});
+
+  // Handle file input for profile picture
+  const handleprofilePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setprofilePicture(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  const handleProfilePictureClick = () => {
+    const fileInput = document.getElementById('profile-image-upload') as HTMLInputElement;
+    fileInput?.click(); // This will open the file picker when the user clicks on the + sign
+  };
+
+  const handlePetImageChange = (petName: string, event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPetImages((prevImages) => ({
+          ...prevImages,
+          [petName]: reader.result as string,
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   // Adding or editing a pet
   const handleSavePet = (pet: Pet) => {
@@ -131,14 +166,6 @@ export const HealthPortal = () => {
     setShowInsuranceFields(false);
   };
 
-  // Format date from MM/DD/YYYY to MM/DD/YY
-  const formatDate = (date: string): string => {
-    const [month, day, year] = date.split("/");
-    const twoDigitYear = year.slice(-2); // Get last two digits of the year
-    return `${month}/${day}/${twoDigitYear}`;
-  };
-  
-
   // Pet Form component (Add or Edit Pet)
   const PetForm = ({
     onSave,
@@ -177,8 +204,7 @@ export const HealthPortal = () => {
     // Add new vaccination 
     const handleAddVaccination = () => {
       if (vaccinationName && vaccinationDate) {
-        const formattedDate = formatDate(vaccinationDate); 
-        const newVaccination = { name: vaccinationName, date: formattedDate };
+        const newVaccination = { name: vaccinationName, date: vaccinationDate };
         setVaccinations([...vaccinations, newVaccination]);
         setVaccinationName("");
         setVaccinationDate("");
@@ -204,7 +230,7 @@ export const HealthPortal = () => {
       // Ensure correct format in date fields
       const formattedVaccinations = vaccinations.map((vaccination) => ({
         ...vaccination,
-        date: formatDate(vaccination.date),
+        date: vaccination.date,
       }));
     
       newPet.vaccinations = formattedVaccinations;
@@ -215,6 +241,31 @@ export const HealthPortal = () => {
 
     return (
       <div className="space-y-4">
+        <div className="flex items-center gap-4">
+          {petImages[pet.name] ? (
+            <img
+              src={petImages[pet.name]}
+              alt={`${pet.name} Icon`}
+              className="w-12 h-12 rounded-full object-cover"
+            />
+          ) : (
+            <div className="w-12 h-12 bg-gray-200 rounded-full" />
+          )}
+          <input
+            id={`pet-image-upload-${pet.name}`}
+            type="file"
+            accept="image/*"
+            onChange={(e) => handlePetImageChange(pet.name, e)}
+            className="hidden"
+          />
+          <label
+            htmlFor={`pet-image-upload-${pet.name}`}
+            className="text-sm text-blue-600 cursor-pointer"
+          >
+            Change Image
+          </label>
+        </div>
+
         {/* Form Fields */}
         <input
           type="text"
@@ -327,18 +378,28 @@ export const HealthPortal = () => {
   };
 
   {/* Insurance Form Page */}
-  const InsuranceForm = ({ onSave, onCancel, myInsurance }: { onSave: (insurance: Insurance) => void; onCancel: () => void; myInsurance: Insurance }) => {
+  const InsuranceForm = ({ 
+    onSave, 
+    onCancel, 
+    myInsurance 
+  }: { 
+    onSave: (insurance: Insurance) => void; 
+    onCancel: () => void; 
+    myInsurance: Insurance 
+  }) => {
     const [company, setCompany] = useState(myInsurance.company);
+    const [companyUrl, setCompanyUrl] = useState<string>(myInsurance.companyUrl || ""); //Option to include URL
     const [expirationDate, setExpirationDate] = useState(myInsurance.expirationDate);
     const [policyNumber, setPolicyNumber] = useState(myInsurance.policyNumber);
 
-    {/* TODO: Fix expiration date format when updating insurance */}
     const handleSubmit = () => {
       const updatedInsurance: Insurance = {
         company,
+        companyUrl,
         expirationDate,
         policyNumber,
       };
+
       onSave(updatedInsurance); // Save updated insurance details
     };
 
@@ -357,6 +418,13 @@ export const HealthPortal = () => {
           onChange={(e) => setExpirationDate(e.target.value)}
           className="w-full p-2 border rounded"
         />
+        <input
+        type="text"
+        value={companyUrl}
+        onChange={(e) => setCompanyUrl(e.target.value)}
+        placeholder="Company URL"
+        className="w-full p-2 border rounded"
+      />
         <input
           type="text"
           value={policyNumber}
@@ -380,10 +448,34 @@ export const HealthPortal = () => {
   {/* Main Health Portal Page */}
   return (
     <div className="max-w-[1440px] mx-auto px-4 py-8">
-      
       {/* User Header */}
       <div className="flex items-center gap-4 mb-8">
-        <div className="w-12 h-12 bg-gray-200 rounded-full" />
+        <div className="relative w-12 h-12">
+          {/* Show profile image if available */}
+          {profilePicture ? (
+            <img
+              src={profilePicture}
+              alt="Profile"
+              className="w-12 h-12 rounded-full object-cover"
+            />
+          ) : (
+            <div 
+              className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-2xl text-gray-500 cursor-pointer"
+              onClick={handleProfilePictureClick}
+            >
+              <span>+</span>
+            </div>
+          )}
+          <label htmlFor="profile-image-upload" className="absolute inset-0 flex justify-center items-center cursor-pointer">
+          </label>
+          <input
+            id="profile-image-upload"
+            type="file"
+            accept="image/*"
+            onChange={handleprofilePictureChange}
+            className="absolute inset-0 opacity-0"
+          />
+        </div>
         <h1 className="text-3xl font-['Poltawski_Nowy',Helvetica]">User 1</h1>
       </div>
 
@@ -429,15 +521,32 @@ export const HealthPortal = () => {
         {/* Main Content */}
         <div className="flex-1 bg-white rounded-3xl p-8 shadow-sm">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {pets.map((pet, index) => (
-              <div key={index} className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <div
-                    className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-2xl cursor-pointer"
-                    onClick={() => setSelectedPetForMedication(pet)}
-                  >
-                    ☺
-                  </div>
+          {pets.map((pet, index) => (
+            <div key={index} className="space-y-4">
+              <div className="flex items-center gap-4">
+                <div
+                  className="w-12 h-12 bg-gray-200 rounded-full cursor-pointer flex items-center justify-center"
+                  onClick={() => document.getElementById(`pet-image-upload-${pet.name}`)?.click()}
+                >
+                  {petImages[pet.name] ? (
+                    <img
+                      src={petImages[pet.name]}
+                      alt={`${pet.name} Icon`}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-xl text-gray-500">+</span> // Placeholder icon
+                  )}
+                </div>
+
+                {/* Hidden file input */}
+                <input
+                  id={`pet-image-upload-${pet.name}`}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handlePetImageChange(pet.name, e)}
+                  className="hidden"
+                />
                   <h2 className="text-2xl font-semibold">{pet.name}</h2>
                   <Button onClick={() => handleEditPet(pet)}>Edit</Button>
                 </div>
@@ -501,12 +610,21 @@ export const HealthPortal = () => {
           <div className="mt-12 bg-gray-50 p-6 rounded-xl">
             <h3 className="text-xl font-semibold mb-4">📖 Current Insurance</h3>
             <p>
-              <span className="font-semibold">Company:</span>{" "}
-              <a href="#" className="text-blue-600">
+            <span className="font-semibold">Company:</span>{" "}
+            {newInsurance.companyUrl ? (
+              <a
+                href={newInsurance.companyUrl} 
+                target="_blank" // Opens in new tab
+                className="text-blue-600"
+                rel="noopener noreferrer" // Prevent new tab from opening
+              >
                 {newInsurance.company}
               </a>
-            </p>
-            <p>
+            ) : (
+              newInsurance.company
+            )}
+          </p>
+          <p>
               <span className="font-semibold">Expiration Date:</span> {newInsurance.expirationDate}
             </p>
             <p>
@@ -534,13 +652,15 @@ export const HealthPortal = () => {
 
       {/* Insurance Update Form */}
       {showInsuranceFields && (
-        <div className="mt-12">
-          <h2 className="text-xl mb-6">Update Insurance</h2>
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+          <h2 className="text-2xl font-semibold mb-4">Update Insurance</h2>
           <InsuranceForm 
             onSave={handleSaveInsurance} 
             onCancel={handleCancelInsurance} 
             myInsurance={newInsurance}
           />
+        </div>
         </div>
       )}
     </div>
