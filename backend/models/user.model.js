@@ -48,7 +48,7 @@ async function findUserByEmail(email) {
             FROM ${TABLE_NAME} 
             WHERE EmailAddress = ?
             `, [email]);
-           // console.log("finderUserByEmail rows: ", rows)
+        console.log("User Object Found: ", rows[0])
         return rows.length > 0 ? rows[0] : null; // Return the first user found or null if none found
     } catch (error) {
         console.error("Error finding user by email:", error);
