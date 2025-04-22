@@ -8,6 +8,7 @@ import { HealthPortal } from "./pages/HealthPortal";
 import { LoginPage } from "./pages/LoginPage"
 import { SignupPage } from "./pages/SignupPage"
 import { Scheduler } from "./pages/Scheduler"
+import { MainDashboard } from "./pages/MainDashboard";
 
 
 const router = createBrowserRouter([
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
   {
     path: "/schedule",
     element: <RootLayout><Scheduler /></RootLayout>,
+  },
+  {
+    path: "/dashboard",
+    element: <RootLayout><MainDashboard /></RootLayout>,
   }
 ]);
 

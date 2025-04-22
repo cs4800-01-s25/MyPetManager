@@ -169,7 +169,7 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// protected route 
+// protected routes
 app.get("/api/protected", authenticateToken, (req, res) => {
   res.status(200).json({
     message: "You accessed a protected route!",
@@ -177,7 +177,8 @@ app.get("/api/protected", authenticateToken, (req, res) => {
   });
 });
 
-
+//example of backend recongizing which user is logged in and sending data back
+// This route won't be accessed without a valid JWT token [user's identity]
 app.get("/api/dashboard", authenticateToken, async (req, res) => {
   const { userId } = req.user;
 

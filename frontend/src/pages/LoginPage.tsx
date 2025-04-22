@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "../components/ui/card";
@@ -10,11 +10,12 @@ interface FormData {
 }
 
 export const LoginPage = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: ""
   });
-
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
@@ -33,7 +34,6 @@ export const LoginPage = () => {
     setError("");
     
     try {
-      // For now, just log the data
       console.log("Form submitted!");
       console.log("Login attempt with:", formData.email);
 
@@ -45,10 +45,16 @@ export const LoginPage = () => {
       });
       if (!response.ok) throw new Error("Invalid credentials");
 
+      // The response is a json with user info and authentication token
+      // You can store the token in localStorage or context for further use
       const data = await response.json();
-      console.log("Login successful!", data);
-      // You could redirect here using React Router
-
+      console.log("Response data:", data);
+      // Store the token and userId in localStorage so that refreshes doesn't cook it.
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("token", data.accessToken); // Store token in localStorage
+       // We redirect to the protected route after successful login
+      navigate("/dashboard");
+      
     } catch (err: any) {
       console.error("Login error:", err);
       setError(err.message || "Login failed. Please try again.");
