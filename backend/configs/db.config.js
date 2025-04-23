@@ -15,8 +15,9 @@ const pool = mysql
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
-    port: process.env.port,
-  }).promise(); // .promise() is used to convert the callback-based API of mysql2 to a promise-based API, allowing for easier async/await usage.
+    port: process.env.MYSQL_PORT,
+  })
+  .promise(); // .promise() is used to convert the callback-based API of mysql2 to a promise-based API, allowing for easier async/await usage.
 // This is a common pattern in Node.js applications to handle database connections efficiently.
 
 // Export the pool object so it can be used in other files. This allows us to use the same connection pool across different parts of the application, improving performance and resource management.
