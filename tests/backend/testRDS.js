@@ -5,9 +5,18 @@
  */
 
 // Run this with:
-// node test/backend/testRDS.js
+// node tests/backend/testRDS.js
 
 const mysql = require("mysql2");
+require("dotenv").config();
+
+console.log("Testing RDS connection...", {
+  host: process.env.AWS_TEST_HOST,
+  user: process.env.AWS_TEST_USER,
+  password: process.env.AWS_TEST_PASSWORD,
+  database: process.env.AWS_TEST_DATABASE,
+  port: process.env.MYSQL_PORT,
+});
 
 const connection = mysql
   .createConnection({

@@ -13,7 +13,8 @@
  */
 
 // Define requirements;
-require("dotenv").config();
+//require("dotenv").config();
+require("../loadEnv") // load environment variables from .env file
 const domain = process.env.BACKEND_DOMAIN;
 const port = process.env.BACKEND_PORT;
 
@@ -28,6 +29,12 @@ const {
   createUser,
   findUserByEmail,
 } = require("./models/user.model.js");
+
+// test server.js port
+console.log("Testing Server connection...", {
+  domain: process.env.BACKEND_DOMAIN,
+  port: process.env.BACKEND_PORT,
+});
 
 // 2) Basic config
 const app = express();
@@ -149,8 +156,7 @@ app.post("/api/auth/login", async (req, res) => {
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
-  console.log("🔎 Auth Header:", authHeader);
-  console.log("🔎 Extracted Token:", token);
+
 
   if (!token) {
     console.warn("Server: No JWT token provided")
