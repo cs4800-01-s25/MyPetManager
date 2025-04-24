@@ -11,10 +11,10 @@ require("../../loadEnv") // load environment variables from .env file
 // This connection pool is created using the mysql2 library and the connection details are stored in environment variables.
 const pool = mysql
   .createPool({
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE,
+    host: process.env.AWS_TEST_HOST,
+    user: process.env.AWS_TEST_USER,
+    password: process.env.AWS_TEST_PASSWORD,
+    database: process.env.AWS_TEST_DATABASE,
     port: process.env.MYSQL_PORT,
   })
   .promise(); // .promise() is used to convert the callback-based API of mysql2 to a promise-based API, allowing for easier async/await usage.
@@ -22,9 +22,9 @@ const pool = mysql
 
 //test db.config.js
 console.log("Testing MySQL local .env connection...", {
-  host: process.env.MYSQL_HOST,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
+  host: process.env.AWS_TEST_HOST,
+  user: process.env.AWS_TEST_USER,
+  password: process.env.AWS_TEST_PASSWORD,
   database: process.env.MYSQL_DATABASE,
   port: process.env.MYSQL_PORT,
 });

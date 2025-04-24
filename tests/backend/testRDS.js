@@ -34,3 +34,10 @@ const connection = mysql
       console.log(results); // results should contain all emails from all existing users
     }
   );
+
+    connection.query(
+      "SELECT password from users",
+      function (err, results, fields) {
+        console.log(results); // results should contain all emails from all existing users
+      }
+    );
