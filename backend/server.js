@@ -1,6 +1,6 @@
 /**
  * @file This will define the backend server that I'll be using for the project.
- * @authors Gian David Marquez and Chey C.
+ * @authors Gian David Marquez and Cheyenne Chavis.
  * 
  * branch comments:
  * 1) Right now the server is only running a database to store the users and passwords.
