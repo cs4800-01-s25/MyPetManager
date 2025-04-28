@@ -1,14 +1,14 @@
 import React from "react";
-import { LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Button } from "../components/ui/button";
 
 // Navigation menu items data
 const navItems = [
   { label: "Exploring", href: "/" },
   { label: "My Pet Profile", href: "/pet-profile" },
   { label: "Health Portal", href: "/health-portal" },
-  { label: "Schedule Appointment", href: "#" },
-  { label: "Join our Community", href: "#" },
+  { label: "Schedule Appointment", href: "/schedule" },
+  { label: "Join our Community", href: "/signup" },
 ];
 
 export const RootLayout = ({ children }: { children: React.ReactNode }) => {
@@ -41,14 +41,14 @@ export const RootLayout = ({ children }: { children: React.ReactNode }) => {
               </Link>
             ))}
           </nav>
-          <button>
-            <div className="flex items-center justify-center gap-2 px-5 py-3 bg-[#edf3fb] rounded-2xl border-[0.5px] border-solid border-[#e8e1da]">
-              <span className="opacity-50 font-paragraph-2 text-[#222222] text-center whitespace-nowrap">
-                Login
-              </span>
-              <LogIn className="w-4 h-4" />
-            </div>
-          </button>
+
+          <Link to="/login">
+            <Button 
+              className="px-5 py-3 bg-[#7c5c42] hover:bg-[#6a4f38] text-white rounded-2xl transition-colors font-paragraph-2"
+            >
+              Login
+            </Button>
+          </Link>
         </div>
       </header>
 

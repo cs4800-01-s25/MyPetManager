@@ -5,6 +5,11 @@ import { RootLayout } from "./layouts/RootLayout";
 import { Home } from "./pages/Home";
 import { PetProfile } from "./pages/PetProfile";
 import { HealthPortal } from "./pages/HealthPortal";
+import { LoginPage } from "./pages/LoginPage"
+import { SignupPage } from "./pages/SignupPage"
+import { Scheduler } from "./pages/Scheduler"
+import { MainDashboard } from "./pages/MainDashboard";
+
 
 const router = createBrowserRouter([
   {
@@ -19,6 +24,22 @@ const router = createBrowserRouter([
     path: "/health-portal",
     element: <RootLayout><HealthPortal /></RootLayout>,
   },
+  {
+    path: "/login",
+    element: <RootLayout><LoginPage /></RootLayout>,
+  },
+  {
+    path: "/signup",
+    element: <RootLayout><SignupPage /></RootLayout>,
+  },
+  {
+    path: "/schedule",
+    element: <RootLayout><Scheduler /></RootLayout>,
+  },
+  {
+    path: "/dashboard",
+    element: <RootLayout><MainDashboard /></RootLayout>,
+  }
 ]);
 
 createRoot(document.getElementById("app") as HTMLElement).render(
