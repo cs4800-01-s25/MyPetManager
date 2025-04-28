@@ -41,6 +41,7 @@ export const LoginPage = () => {
       const response = await fetch("http://localhost:4350/api/auth/login", { 
         method: "POST",
         headers: { "Content-Type": "application/json" },
+<<<<<<< HEAD
         body: JSON.stringify(formData) // this structured as email: nextline password
       });
       if (!response.ok) throw new Error("Invalid credentials");
@@ -54,6 +55,26 @@ export const LoginPage = () => {
       localStorage.setItem("token", data.accessToken); // Store token in localStorage
        // We redirect to the protected route after successful login
       navigate("/dashboard");
+=======
+        body: JSON.stringify(formData)
+      });
+      
+      if (!response.ok) throw new Error("Invalid credentials");
+
+      const data = await response.json();
+      console.log("Response data:", data);
+      
+      // Store user data and token
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("token", data.accessToken);
+
+      // Check if user is admin and redirect accordingly
+      if (data.user) {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
+>>>>>>> 5c6fcdb (MyPetManager Dashboard)
       
     } catch (err: any) {
       console.error("Login error:", err);

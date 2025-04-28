@@ -40,5 +40,11 @@
   "homepage": "https://github.com/cs4800-01-s25/MyPetManager#readme",
   "devDependencies": {
     "concurrently": "^9.1.2"
+<<<<<<< HEAD
+=======
+  },
+  "dependencies": {
+    "mypetmanager": "file:"
+>>>>>>> 5c6fcdb (MyPetManager Dashboard)
   }
 }

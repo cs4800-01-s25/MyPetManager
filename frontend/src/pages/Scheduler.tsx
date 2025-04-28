@@ -13,16 +13,24 @@ interface Appointment {
   completed: boolean;
   remind: boolean;
 }
+<<<<<<< HEAD
 
 const categories = ["Vaccination", "Grooming", "Clinic Visit"];
 
+=======
+const categories = ["Vaccination", "Grooming", "Clinic Visit"];
+>>>>>>> 5c6fcdb (MyPetManager Dashboard)
 export const Scheduler = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([
     {
       id: 1,
       title: "Vet Check-up",
       subtitle: "Annual vaccine & physical exam",
+<<<<<<< HEAD
       date: "2025-04-20",
+=======
+      date: "2025-04-29",
+>>>>>>> 5c6fcdb (MyPetManager Dashboard)
       time: "10:00",
       location: "Happy Paws Clinic",
       category: "Vaccination",

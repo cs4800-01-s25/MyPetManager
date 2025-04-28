@@ -23,7 +23,12 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
+<<<<<<< HEAD
     "mysql2": "^3.12.0"
+=======
+    "mysql2": "^3.12.0",
+    "server": "file:"
+>>>>>>> 5c6fcdb (MyPetManager Dashboard)
   },
   "devDependencies": {
     "nodemon": "^3.0.2"

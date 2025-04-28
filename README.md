@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # MyPetManager by Cache Me If You Can
 Website Repo holding frontend and backend for MyPetManager, a CS4800 group project.
 
@@ -72,3 +73,6 @@ We assume that you are in the `MyPetManager` top-level folder in a separate term
 This calls the `start` script within each workspace. For now we will use the `Ctrl` and `C` key stroke to send a termination signal to the backend and frontend servers.
 
 !-->
+=======
+
+>>>>>>> 5c6fcdb (MyPetManager Dashboard)
