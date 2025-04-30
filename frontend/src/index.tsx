@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { RootLayout } from "./layouts/RootLayout";
-import { AppProvider } from "./pages/AppContext"; // <-- Make sure this path is correct
+import { AppProvider } from "./pages/AppContext";
 
 import { Home } from "./pages/Home";
 import { PetProfile } from "./pages/PetProfile";
@@ -11,7 +11,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { SignupPage } from "./pages/SignupPage";
 import { Scheduler } from "./pages/Scheduler";
 import Dashboard from "./pages/Dashboard";
-import { AdminLayout } from "./layouts/AdminLayout"; // make sure this import exists
+import { AdminLayout } from "./layouts/AdminLayout"; 
 import { MyPetProfile } from "./pages/MyPetProfile";
 
 const router = createBrowserRouter([
