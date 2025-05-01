@@ -12,6 +12,7 @@ interface Appointment {
   category: string;
   completed: boolean;
   remind: boolean;
+  link: string;
 }
 
 const categories = ["Vaccination", "Grooming", "Clinic Visit"];
@@ -28,6 +29,7 @@ export const Scheduler = () => {
       category: "Vaccination",
       completed: false,
       remind: true,
+      link: "https://www.happypaws.com",
     },
     {
       id: 2,
@@ -39,6 +41,7 @@ export const Scheduler = () => {
       category: "Grooming",
       completed: false,
       remind: false,
+      link: "",
     },
     {
       id: 3,
@@ -50,6 +53,7 @@ export const Scheduler = () => {
       category: "Clinic Visit",
       completed: false,
       remind: true,
+      link: "",
     },
     {
       id: 4,
@@ -61,6 +65,7 @@ export const Scheduler = () => {
       category: "Vaccination",
       completed: false,
       remind: false,
+      link: "",
     },
     {
       id: 5,
@@ -72,6 +77,7 @@ export const Scheduler = () => {
       category: "Grooming",
       completed: false,
       remind: true,
+      link: "",
     },
     {
       id: 6,
@@ -83,12 +89,14 @@ export const Scheduler = () => {
       category: "Clinic Visit",
       completed: false,
       remind: true,
+      link: "",
     },
   ]);
 
   const [showForm, setShowForm] = useState(false);
   const [editingAppt, setEditingAppt] = useState<Appointment | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(null);
+
 
   const [formData, setFormData] = useState({
     title: "",
@@ -98,6 +106,7 @@ export const Scheduler = () => {
     location: "",
     category: "",
     remind: false,
+    link: "",
   });
 
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
@@ -141,23 +150,27 @@ const pastAppointments = [...appointments]
     return 0; // leave rest unsorted
   });
 
+  // Marks appointments as done
   const handleCheck = (id: number) => {
     setAppointments((prev) =>
       prev.map((a) => (a.id === id ? { ...a, completed: true } : a))
     );
   };
 
+  // Deletes appointments
   const handleDelete = (id: number) => {
     setAppointments((prev) => prev.filter((a) => a.id !== id));
     setShowDeleteConfirm(null);
   };
 
+  // Edit info
   const handleEdit = (appt: Appointment) => {
     setFormData({ ...appt });
     setEditingAppt(appt);
     setShowForm(true);
   };
 
+  // Reset appointment info if needed
   const resetForm = () => {
     setEditingAppt(null);
     setFormData({
@@ -168,11 +181,13 @@ const pastAppointments = [...appointments]
       location: "",
       category: "",
       remind: false,
+      link: "",
     });
     setFormErrors({});
     setShowForm(false);
   };
 
+  // Make sure that all info is fulfilled
   const validateForm = () => {
     const errors: Record<string, string> = {};
     Object.entries(formData).forEach(([key, value]) => {
@@ -187,6 +202,8 @@ const pastAppointments = [...appointments]
     return Object.keys(errors).length === 0;
   };
 
+
+  // Save info in form/display it back to user
   const handleSave = () => {
     if (!validateForm()) return;
 
@@ -208,7 +225,7 @@ const pastAppointments = [...appointments]
   return (
     <div className="max-w-[1440px] mx-auto px-8 py-12">
       {/* Header */}
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex justify-between items-center gap-4 mb-8">
         <h1 className="text-5xl font-['Poltawski_Nowy',Helvetica] font-normal mb-12">Pet Care Schedule</h1>
         <div className="flex justify-end mb-8">
           <Button variant="outline" onClick={() => setShowForm(true)} className="gap-2 text-gray-700">
@@ -223,26 +240,43 @@ const pastAppointments = [...appointments]
   <p className="text-gray-500 mb-8">No upcoming appointments.</p>
 )}
 <div className="space-y-4 mb-12">
-  {upcomingAppointments.map((appt) => (
-    <div key={appt.id} className="border rounded-xl p-6 bg-white shadow-sm">
-      <div className="flex justify-between items-center">
-        <div>
-          <h3 className="text-xl font-semibold">{appt.title}</h3>
-          <p className="text-gray-600">{appt.subtitle}</p>
-          <p className="text-gray-500 mt-1">{appt.date} | {appt.time} | {appt.location}</p>
-        </div>
-        <div className="text-sm flex flex-col items-end gap-2">
-          <Button size="sm" onClick={() => handleCheck(appt.id)}>
-            Mark as Done
-          </Button>
-          <div className="flex gap-3 text-sm text-blue-600 mt-2">
-            <button onClick={() => handleEdit(appt)}>Edit</button>
-            <button onClick={() => setShowDeleteConfirm(appt.id)}>Delete</button>
-          </div>
+  
+{upcomingAppointments.map((appt) => (
+  <div key={appt.id} className="border rounded-xl p-6 bg-white shadow-sm">
+    <div className="flex justify-between items-center">
+      <div>
+      <h3 className="text-xl font-semibold">
+        {appt.link ? (
+          <a
+            href={appt.link}
+            target="_blank"
+            className="text-blue-500 hover:underline"
+            rel="noopener noreferrer"
+          >
+            {appt.title}
+          </a>
+        ) : (
+          appt.title
+        )}
+      </h3>
+        <p className="text-gray-600">{appt.subtitle}</p>
+        <p className="text-gray-500 mt-1">{appt.date} | {appt.time} | {appt.location}</p>
+      </div>
+      <div className="text-sm flex flex-col items-end gap-2">
+
+      {/* Testing mark as done */}
+
+        <Button size="sm" onClick={() => handleCheck(appt.id)}>
+          Mark as Done
+        </Button>
+        <div className="flex gap-3 text-sm text-blue-600 mt-2">
+          <button onClick={() => handleEdit(appt)}>Edit</button>
+          <button onClick={() => setShowDeleteConfirm(appt.id)}>Delete</button>
         </div>
       </div>
     </div>
-  ))}
+  </div>
+))}
 </div>
 
 <h2 className="text-2xl font-semibold mb-4">Past Appointments</h2>
@@ -254,7 +288,20 @@ const pastAppointments = [...appointments]
     <div key={appt.id} className="border rounded-xl p-6 bg-white shadow-sm">
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-xl font-semibold">{appt.title}</h3>
+          <h3 className="text-xl font-semibold">
+            {appt.link ? (
+              <a
+                href={appt.link}
+                target="_blank"
+                className="text-blue-500 hover:underline"
+                rel="noopener noreferrer"
+              >
+                {appt.title}
+              </a>
+            ) : (
+              appt.title
+            )}
+          </h3>
           <p className="text-gray-600">{appt.subtitle}</p>
           <p className="text-gray-500 mt-1">{appt.date} | {appt.time} | {appt.location}</p>
         </div>
@@ -360,6 +407,18 @@ const pastAppointments = [...appointments]
             {formErrors.location && (
               <p className="text-red-500 text-sm">{formErrors.location}</p>
             )}
+
+            <input
+              type="text"
+              placeholder="Appointment Website Link"
+              className={`w-full border p-2 rounded ${
+                formErrors.link ? "border-red-500" : "border-gray-300"
+              }`}
+              value={formData.link || ""}
+              onChange={(e) => setFormData({ ...formData, link: e.target.value })}
+            />
+            {formErrors.link && <p className="text-red-500 text-sm">{formErrors.link}</p>}
+
 
             <div>
               <p className="mb-1 font-medium">Category</p>
