@@ -24,6 +24,14 @@ const cors = require("cors");
 const argon2 = require("argon2");
 var jwt = require("jsonwebtoken");
 
+// import s3 bucket stuff
+const { s3, bucketName } = require("./configs/bucket.config");
+// temp test to check if ur env loaded in
+console.log("S3 Bucket Config Loaded ", {
+  bucketRegion: s3.config.bucketRegion,
+  bucketName,
+});
+
 // import user functions for database
 const {
   createUser,
