@@ -71,7 +71,6 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // for form data
 
-// 5) TODO: JWT Secret key
 
 // 6) Basic route
 app.get("/", (req, res) => {
