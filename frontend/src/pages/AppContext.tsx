@@ -38,7 +38,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     const [pets, setPets] = useState<Pet[]>([]);
   
     const [appointments, setAppointments] = useState<Appointment[]>([
-      { id: 1, title: "Wellness Exam", date: "April 25, 2024", time: "2:00 PM", status: "Missed" }
+      { id: 1, title: "Wellness Exam", date: "April 25, 2025", time: "2:00 PM", location: "Pet Hospital", status: "Missed" }
     ]);
   
     return (

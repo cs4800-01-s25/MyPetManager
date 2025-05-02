@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useAppContext } from './AppContext'; 
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
 const hardcodedPets = [
   {
@@ -40,12 +42,26 @@ const hardcodedPets = [
   }
 ];
 
+type CalendarValue = Date | Date[] | null;
+
 const Dashboard = () => {
   const { pets, appointments } = useAppContext(); // Fetch from context
   const [selectedPet, setSelectedPet] = useState<number | null>(null);
+  const [selectedDate, setSelectedDate] = useState<CalendarValue>(null);
+  const [selectedAppointments, setSelectedAppointments] = useState<any[]>([]);
 
   // Use pets from context, but fallback to hardcodedPets if empty
   const displayPets = pets.length > 0 ? pets : hardcodedPets;
+
+  // Handle date selection
+  const handleDateClick = (date: Date) => {
+    setSelectedDate(date);
+    const appointmentsForDate = appointments.filter(appt => {
+      const apptDate = new Date(appt.date);
+      return apptDate.toDateString() === date.toDateString();
+    });
+    setSelectedAppointments(appointmentsForDate);
+  };
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
@@ -77,40 +93,6 @@ const Dashboard = () => {
             </div>
           ))}
         </div>
-      </section>
-
-      {/* Appointments Section */}
-      <section className="mb-10">
-        <h3 className="text-2xl font-semibold mb-4">Upcoming Appointments</h3>
-        {appointments.length === 0 ? (
-          <p className="text-gray-500">No appointments scheduled.</p>
-        ) : (
-          <div className="bg-white rounded-md shadow-md p-4">
-            {appointments.map((appt) => (
-              <div
-                key={appt.id}
-                className="flex justify-between items-center border-b last:border-b-0 py-3"
-              >
-                <div>
-                  <p className="font-medium">{appt.title}</p>
-                  <p className="text-sm text-gray-500">{appt.date} at {appt.time}</p>
-                  {appt.location && <p className="text-xs text-blue-500">{appt.location}</p>}
-                </div>
-                <div className="flex items-center">
-                  <span className={`text-sm mr-2 ${appt.status === 'Missed' ? 'text-red-500' : 'text-gray-500'}`}>
-                    {appt.status}
-                  </span>
-                  <input
-                    type="checkbox"
-                    checked={appt.status !== 'Missed'}
-                    readOnly
-                    className="form-checkbox h-5 w-5 text-blue-600"
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
       </section>
 
       {/* Selected Pet Details */}
@@ -158,6 +140,78 @@ const Dashboard = () => {
                   Close
                 </button>
               </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Appointments Section */}
+      <section className="mb-10">
+        <h3 className="text-2xl font-semibold mb-4">Upcoming Appointments</h3>
+        {appointments.length === 0 ? (
+          <p className="text-gray-500">No appointments scheduled.</p>
+        ) : (
+          <div className="bg-white rounded-md shadow-md p-4">
+            {appointments.map((appt) => (
+              <div
+                key={appt.id}
+                className="flex justify-between items-center border-b last:border-b-0 py-3"
+              >
+                <div>
+                  <p className="font-medium">{appt.title}</p>
+                  <p className="text-sm text-gray-500">{appt.date} at {appt.time}</p>
+                  {appt.location && <p className="text-s text-black-500">{appt.location}</p>}
+                </div>
+                <div className="flex items-center">
+                  <span className={`text-sm mr-2 ${appt.status === 'Missed' ? 'text-red-500' : 'text-gray-500'}`} >
+                    {appt.status}
+                  </span>
+                  <input
+                    type="checkbox"
+                    checked={appt.status !== 'Missed'}
+                    readOnly
+                    className="form-checkbox h-5 w-5 text-blue-600"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Calendar Section */}
+      <div className="mb-10">
+        <h3 className="text-2xl font-semibold mb-4">Upcoming Appointments</h3>
+        <Calendar
+          onClickDay={handleDateClick} // When a date is clicked, show appointments for that date
+          tileClassName={({date}) => {
+            const hasAppointment = appointments.some(appt => 
+              new Date(appt.date).toDateString() === date.toDateString()
+            );
+            return hasAppointment ? 'bg-blue-300' : ''; // Apply bg-blue-300 if there's an appointment
+          }}
+          tileContent={({date}) => {
+            const hasAppointment = appointments.some(appt => 
+              new Date(appt.date).toDateString() === date.toDateString()
+            );
+            return hasAppointment ? (
+              <div className="w-full h-full bg-red-300 opacity-50"></div>
+            ) : null;
+          }}
+        />
+      </div>
+
+      {/* Appointment Details for Selected Date */}
+      {selectedAppointments.length > 0 && (
+        <div className="bg-white rounded-lg shadow-md p-4 mt-6">
+          <h3 className="text-xl font-semibold">
+            Appointments for {selectedDate && Array.isArray(selectedDate) ? '' : selectedDate?.toLocaleDateString()}
+          </h3>
+          {selectedAppointments.map((appt) => (
+            <div key={appt.id} className="border-b last:border-b-0 py-3">
+              <p className="font-medium">{appt.title}</p>
+              <p className="text-sm text-gray-500">Time: {appt.time}</p>
+              <p className="text-sm text-gray-500">Location: {appt.location}</p>
             </div>
           ))}
         </div>
