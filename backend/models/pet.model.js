@@ -26,28 +26,33 @@ const PRIMARY_KEY = "PetID";
  * @returns {Promise<Object>} Promise resolving with the newly created pet object.
  */
 async function createPet(petData) {
-    const { PetOwnerID, name, dateOfBirth, breed, species, sex, weight } =
-        petData;
+  const { ownerID, name, dateOfBirth, breed, species, sex, weight } = petData;
+  if (!ownerID || !name || !dateOfBirth || !sex) {
+    // Throw a specific error BEFORE trying the database query
+    throw new Error("Missing required fields");
+  }
 
-    try {
-        const [result] = await pool.query(`
+  try {
+    const [result] = await pool.query(
+      `
         INSERT INTO ${TABLE_NAME}  (PetOwnerID, Name, DateOfBirth, Breed, Species, Sex, Weight)
         VALUES (?, ?, ?, ?, ?, ?, ?)
-        `, [PetOwnerID, name, dateOfBirth, breed, species, sex, weight]
-        );
-        // The meaning behind the below if statement is:
-        // If the insert was successful, result.insertId will contain the ID of the newly created pet. Meaning the pet was created successfully
-        // If the insert was not successful, result.insertId will be undefined or null.
-        if (result.insertId) {
-            return findByid(result.insertId, PetOwnerID);
-        } // return the object
-        else {
-            throw new Error("Failed to create pet: No ID returned.");
-        }
-    } catch (error) {
-        console.error("Model: Error creating pet:", error);
-        throw error; // Rethrow the error for further handling
+        `,
+      [ownerID, name, dateOfBirth, breed, species, sex, weight]
+    );
+    // The meaning behind the below if statement is:
+    // If the insert was successful, result.insertId will contain the ID of the newly created pet. Meaning the pet was created successfully
+    // If the insert was not successful, result.insertId will be undefined or null.
+    if (result.insertId) {
+      return findById(result.insertId, ownerID);
+    } // return the object
+    else {
+      throw new Error("Failed to create pet: No ID returned.");
     }
+  } catch (error) {
+    console.error("Model: Error creating pet:", error);
+    throw error; // Rethrow the error for further handling
+  }
 }
 
 // READ
@@ -57,19 +62,21 @@ async function createPet(petData) {
  * @returns {Promise<Array<Object>>} Promise resolving with an array of pet objects.
  */
 async function getAllPetsByOwnerId(PetOwnerID) {
-    try {
-        const [rows] = await pool.query(`
+  try {
+    const [rows] = await pool.query(
+      `
         SELECT *
         FROM ${TABLE_NAME}
         WHERE PetOwnerID = ?
         ORDER BY CreatedAt DESC
-        `,[PetOwnerID]
-        );
-        return rows;
-    } catch (error) {
-        console.error("Error fetching pets by owner ID:", error);
-        throw error;
-    }
+        `,
+      [PetOwnerID]
+    );
+    return rows;
+  } catch (error) {
+    console.error("Error fetching pets by owner ID:", error);
+    throw error;
+  }
 }
 
 /**
@@ -78,42 +85,46 @@ async function getAllPetsByOwnerId(PetOwnerID) {
  * @returns {Promise<Object|null>} The pet object or null.
  */
 async function getPetById(petId) {
-    try {
-        const [rows] = await pool.query(`
+  try {
+    const [rows] = await pool.query(
+      `
         SELECT * 
         FROM ${TABLE_NAME}
         WHERE ${PRIMARY_KEY} = ?
-        `, [petId]
-        );
-        return rows.length > 0 ? rows[0] : null;
-    } catch (error) {
-        console.error("Error fetching pet by ID:", error);
-        throw error;
-    }
+        `,
+      [petId]
+    );
+    return rows.length > 0 ? rows[0] : null;
+  } catch (error) {
+    console.error("Error fetching pet by ID:", error);
+    throw error;
+  }
 }
 
 /**
  * Finds a specific pet by its ID and owner ID.
  * Ensures the user requesting the pet is the owner.
  * @param {Number} petId - The ID of the pet to find.
- * @param {String} ownerId - The ID of the pet owner making the request.
+ * @param {String} ownerId - The pPet Owner ID of the pet owner making the request.
  * @returns {Promise<Object|null>} Promise resolving with the pet object or null if not found or not owned by the user.
  * @throws {Error} Throws error if database query fails.
  */
-const findById = async (petId, ownerId) => {
-    try {
-        const [rows] = await pool.query(`
+async function findById(petId, ownerId) {
+  try {
+    const [rows] = await pool.query(
+      `
             SELECT *
             FROM ${TABLE_NAME}
             WHERE ${PRIMARY_KEY} = ? AND PetOwnerID = ?
-            `, [petId, ownerId]
-        );
-        return rows.length > 0 ? rows[0] : null;
-    } catch (error) {
-        console.error("Error fetching pet by ID:", error);
-        throw error;
-    }
-};
+            `,
+      [petId, ownerId]
+    );
+    return rows.length > 0 ? rows[0] : null;
+  } catch (error) {
+    console.error("Error fetching pet by PetID and Owner ID:", error);
+    throw error;
+  }
+}
 
 // Update
 /**
@@ -124,19 +135,48 @@ const findById = async (petId, ownerId) => {
  * @returns {Promise<Object|null>} Promise resolving with the updated pet object or null if not found/not owned.
  */
 async function updatePet(petId, ownerId, updateData) {
-    const { name, dateOfBirth, breed, species, sex, weight } = updateData;
-    // i may have to change this to check if theyre actually adding anything
-    try {
-        const [result] = await pool.query(`
-            UPDATE ${TABLE_NAME}
-            Set NAME = ?, DateOfBirth = ?, Breed = ?, Species ?, Sex = ?, Weight ?
-            WHERE ${PRIMARY_KEY} = ? AND PetOwnerID = ?
-            `, [name, dateOfBirth, breed, species, sex, weight, petId, ownerId]
-        );
-    } catch (error) {
-        console.error("Error updating pet", error);
-        throw error;
+  const editableColumns = [
+    "Name",
+    "DateOfBirth",
+    "Breed",
+    "Species",
+    "Sex",
+    "Weight",
+  ];
+  const columnsToUpdate = [];
+  const values = [];
+
+  // check which columns are in updateData. Then only take those in.
+  for (const column of editableColumns) {
+    if (updateData.hasOwnProperty(column)) {
+      columnsToUpdate.push(`${column} = ?`);
+      values.push(updateData[column]);
     }
+  }
+
+  if (columnsToUpdate == 0) {
+    console.log("Model: No valid fields provided for update");
+    return findById(petId, ownerId);
+  }
+
+  values.push(petId, ownerId); // Add PetId and PetOwnerID
+
+  // results in a more dynamic editable data
+  try {
+    const [result] = await pool.query(
+      `
+            UPDATE ${TABLE_NAME}
+            SET ${columnsToUpdate.join(", ")} 
+            WHERE ${PRIMARY_KEY} = ? AND PetOwnerID = ?
+            `,
+      values
+    );
+
+    return result.affectedRows > 0 ? findById(petId, ownerId) : null;
+  } catch (error) {
+    console.error("Error updating pet", error);
+    throw error;
+  }
 }
 
 /**
@@ -148,17 +188,19 @@ async function updatePet(petId, ownerId, updateData) {
  * @throws {Error} Throws error if database deletion fails.
  */
 async function deletePet(petId, ownerId) {
-    try {
-        const [result] = await pool.query(`
-            DELETE FROM $(TABLE_NAME)
+  try {
+    const [result] = await pool.query(
+      `
+            DELETE FROM ${TABLE_NAME}
             WHERE ${PRIMARY_KEY} = ? AND PetOwnerID = ?
-            `, [petId, ownerId]
-        );
+            `,
+      [petId, ownerId]
+    );
     return result.affectedRows > 0;
-    } catch (error) {
-        console.error("Controller: Error deleting pet: ", error);
-        throw error;
-    }
+  } catch (error) {
+    console.error("Controller: Error deleting pet: ", error);
+    throw error;
+  }
 }
 
 // Export the CRUD functions so they can be used by controllers or other files.
@@ -167,6 +209,6 @@ module.exports = {
   createPet,
   getAllPetsByOwnerId,
   findById,
-  updatePet, 
+  updatePet,
   deletePet,
 };

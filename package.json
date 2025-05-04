@@ -10,7 +10,8 @@
   "scripts": {
     "start": "concurrently --kill-others \"npm run start -w backend\" \"npm run build -w frontend\"",
     "stop": "npm stop --workspaces",
-    "test": "concurrently --kill-others \"npm run dev -w backend\" \"npm run dev -w frontend\""
+    "dev": "concurrently --kill-others \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
