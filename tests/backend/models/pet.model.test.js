@@ -5,7 +5,7 @@ jest.mock("../../../backend/configs/testDB.config", () => ({
     query: mockQuery, // Use the mock function here
 }));
 
-const pool = require("../../../backend/configs/testDB.config");
+// pet model will be using testDB.config, to work
 const petModel = require("../../../backend/models/pet.model");
 
 // Are the queires
