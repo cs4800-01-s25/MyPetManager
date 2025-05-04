@@ -10,7 +10,7 @@ const pool = require("../configs/db.config"); // Import the database connection 
 
 // Specify the database table name and key(s) for the user model.
 const TABLE_NAME = "users"; // The name of the database table for users
-const PRIMARY_KEY = "user_id"; // The primary key for the users table
+const PRIMARY_KEY = "UserID"; // The primary key for the users table
 
 
 // --- User Model Functions ---
@@ -63,8 +63,14 @@ async function findUserByEmail(email) {
  * @returns {Promise<object|null>} A promise that resolves to the user object if found, otherwise null.
  */
 async function findUserById(userId) {
+    console.log("findUserByID called: " + userId);
     try {
-        const [rows] = await pool.query(`SELECT * FROM ${TABLE_NAME} WHERE ${PRIMARY_KEY} = ?`, [userId]);
+        const [rows] = await pool.query(`
+            SELECT * 
+            FROM ${TABLE_NAME} 
+            WHERE ${PRIMARY_KEY} = ?
+            `, [userId]);
+        console.log("User Object Found: ", rows[0]);
         return rows.length > 0 ? rows[0] : null; // Return the first user found or null if none found
     } catch (error) {
         console.error("Error finding user by ID:", error);
