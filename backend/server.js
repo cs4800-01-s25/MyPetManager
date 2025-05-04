@@ -31,6 +31,8 @@ console.log("S3 Bucket Config Loaded ", {
 //  import routes 
 const authRoutes = require("./routes/auth.routes")
 const userRoutes = require("./routes/user.routes");
+const petRoutes = require("./routes/pet.routes");
+
 
 // test server.js port
 console.log("Testing Server connection...", {
@@ -81,6 +83,10 @@ app.use('/api/auth', authRoutes);
 // User Routes
 // /api/users/dashboard
 app.use("/api/users", userRoutes); 
+
+// Pet Routes:
+// CRUD routes
+app.use('/api/pets', petRoutes); 
 
 // listen and start
 // Start server

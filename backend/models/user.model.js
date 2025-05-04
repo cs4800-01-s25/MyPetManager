@@ -41,7 +41,7 @@ async function createUser(email, hashedPassword) {
  * @returns {Promise<object|null>} A promise that resolves to the user object if found, otherwise null.
  */
 async function findUserByEmail(email) {
-    console.log("findUserByEmail called: " + email);
+    console.log("Model: findUserByEmail called: " + email);
     try {
         const [rows] = await pool.query(`
             SELECT * 

@@ -6,6 +6,8 @@
 
 // Define requirements
 const pool = require("../configs/db.config"); // Import the database connection pool from the db.config.js file
+//const pool = require("../configs/testDB.config"); // Import the database connection pool from the db.config.js file
+// change to testDB.config for jest
 
 // Specify the database table name and key(s) for the pet model.
 const TABLE_NAME = "pets";

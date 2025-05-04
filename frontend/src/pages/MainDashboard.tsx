@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 
 interface userInfo {
+  userType: string;
   userId: string;
   firstName: string;
   lastName: string
@@ -71,6 +72,7 @@ export const MainDashboard = () => {
     <div>
       <h1>Welcome to Your Dashboard, {userInfo?.firstName}</h1>
       <p>Your User ID: {userInfo?.userId}</p>
+      <p>Your User Type: {userInfo?.userType}</p>
     </div>
   );
 };
