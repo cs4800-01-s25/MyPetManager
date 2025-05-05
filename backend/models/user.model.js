@@ -37,6 +37,7 @@ async function createUser(email, hashedPassword) {
 
 /**
  * Finds a user by their email address in the database.
+ * This is used for logging in, in which password is returned
  * @param {string} email - The email address of the user to find.
  * @returns {Promise<object|null>} A promise that resolves to the user object if found, otherwise null.
  */
@@ -56,6 +57,48 @@ async function findUserByEmail(email) {
     }
 }
 
+/**
+ * Finds a user by their email address in the database.
+ * This is used for checking if user exixts for registering in
+ * TODO ADD
+ * @param {string} email - The email address of the user to find.
+ * @returns {Promise<object|null>} A promise that resolves to the user object if found, otherwise null.
+ */
+async function userExistsByEmail(email) {
+    try {
+        const [rows] = await pool.query(`
+            SELECT 1
+            FROM ${TABLE_NAME}
+            WHERE EmailAddress = ?
+            `, [email]
+        );
+        return rows.length > 0 ? rows[0] : null;
+    } catch (error) {
+      console.error("User Model: Error checking user by email:", error);
+      throw error; // Rethrow the error for further handling
+    }
+}
+
+/**
+ * fetching user info after login, in authenticated dashboards, etc.
+ * Use for public dashboards non-senstivite info, NO passwords
+ * @param {number} userId - The ID of the user to find.
+ * @returns {Promise<object|null>} A promise that resolves to the user object if found, otherwise null.
+ */
+async function getUserPublicDataById(userId) {
+    try {
+        const [rows] = await pool.query(`
+            SELECT UserID, EmailAddress, UserType
+            FROM ${TABLE_NAME}
+            WHERE UserID = ?
+            `, [userId]
+        ); 
+        return rows.length > 0 ? rows[0] : null;
+    } catch(error) {
+        console.error("User Model: Error finding public user info by ID:", error);
+        throw error; // Rethrow the error for further handling
+    }
+}
 
 /**
  * Finds a user by their ID in the database.
@@ -102,5 +145,7 @@ module.exports = {
     createUser,
     findUserByEmail,
     findUserById,
+    userExistsByEmail,
+    getUserPublicDataById,
     updatePassword
 };

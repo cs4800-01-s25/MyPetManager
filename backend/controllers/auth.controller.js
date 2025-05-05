@@ -46,10 +46,10 @@ const handleSignup = async (req, res) => {
 };
 
 /** 
- * Handles user login requests by verifying credentials and returns a JWT if successful.
+ * Handles user login requests by verifying credentials and returns a JWT Token if successful.
  * @param
  * @author Gian
- * honestly just testing this cause i saw on stackoverflow anad i want to be able to have it explain to backendteam while twriting this
+ * returns (userID, userType, email)
  */
 const handleLogin =  async (req, res) => {
   const { email, password } = req.body;
@@ -76,13 +76,14 @@ const handleLogin =  async (req, res) => {
       if (await argon2.verify(user.password, password)) {
         // send JWT(payload, secretToken, expiration)
         const token = jwt.sign(
-          { userId: user.UserID, email: user.EmailAddress },
+          { userId: user.UserID, userType: user.UserType, email: user.EmailAddress },
           process.env.JWT_SECRET,
           { expiresIn: process.env.JWT_EXPIRES_IN }
         );
 
         console.log("User has logged in with credentials: ");
         console.log("user.ID: " + user.UserID);
+        console.log("user.UserType: " + user.UserType);
         console.log("user.EmailAdress: " + user.EmailAddress);
         console.log("🔐 JWT Created:");
         console.log("Token:", token);
@@ -91,10 +92,6 @@ const handleLogin =  async (req, res) => {
         return res.status(200).json({
           sucess: true,
           message: "Login sucessful",
-          user: {
-            id: user.UserID,
-            email: user.EmailAddress,
-          },
           accessToken: token,
         });
       } else {

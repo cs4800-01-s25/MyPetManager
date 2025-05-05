@@ -8,7 +8,7 @@ require("../../loadEnv"); // load environment variables from .env file
 
 /**
  * Middleware to verify JWT token from the Authorization header.
- * If valid, attaches user payload to req.user.
+ * If valid, attaches user payload defined by controller to req.user.
  * If invalid or missing, sends 401 or 403 response.
  * Development Mode uses (localStorage): Frontend gets token from Authorization header
  */
@@ -21,13 +21,14 @@ const authenticateToken = (req, res, next) => {
     return res.sendStatus(401);
   }
 
+  // decodes token to make it usable for controller
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) {
       console.warn("Auth.Middleware: Invalid or expired token:", err.message);
       return res.sendStatus(403); //Forbidden
     }
     console.log("Auth.Middleware: JWT Verified. Payload:", user);
-    // Attach user payload t id, email, token creation date, and token expiration date to the request object
+    // Attach user payload user id, email, token creation date, and token expiration date to the request object
     req.user = user;
     next();
   });
