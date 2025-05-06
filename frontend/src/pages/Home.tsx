@@ -50,7 +50,7 @@ export const Home = () => {
       pet-loving community — all in one place.
     </p>
 
-    <a href="/pet-profile">
+    <a href="/signup">
       <Button className="mt-10 h-[60px] w-[190px] bg-[#7c5c42] rounded-full shadow-inner-shadow-100">
         <span className="text-[22px] font-['Poltawski_Nowy',Helvetica] font-bold text-white leading-[26px]">
           Get Started
@@ -70,20 +70,20 @@ export const Home = () => {
   <div className="flex justify-around items-center relative z-10">
     {/* Circle 1 */}
     <div className="w-64 h-64 bg-white rounded-full flex flex-col justify-center items-center text-center border border-black shadow-md">
-      <h2 className="text-[20px] font-['Poltawski_Nowy',Helvetica] font-bold mb-3">Health Portal</h2>
-      <p className="px-4 text-sm">Keep track of medication and refill reminders</p>
+      <h2 className="text-[20px] font-['Poltawski_Nowy',Helvetica] font-bold mb-3">Pet Profile</h2>
+      <p className="px-4 text-sm">Tell us about your pets!</p>
     </div>
 
     {/* Circle 2 */}
     <div className="w-64 h-64 bg-white rounded-full flex flex-col justify-center items-center text-center border border-black shadow-md">
-      <h3 className="text-[20px] font-['Poltawski_Nowy',Helvetica] font-bold mb-3">Scheduler</h3>
-      <p className="px-4 text-sm">Include option of booking appointments for pet service</p>
+    <h2 className="text-[20px] font-['Poltawski_Nowy',Helvetica] font-bold mb-3">Health Portal</h2>
+    <p className="px-4 text-sm">Keep track of medication and insurance logs</p>
     </div>
 
     {/* Circle 3 */}
     <div className="w-64 h-64 bg-white rounded-full flex flex-col justify-center items-center text-center border border-black shadow-md">
-      <h3 className="text-[20px] font-['Poltawski_Nowy',Helvetica] font-bold mb-3">A Forum Page</h3>
-      <p className="px-4 text-sm">Add a local forum page for local discussions</p>
+    <h3 className="text-[20px] font-['Poltawski_Nowy',Helvetica] font-bold mb-3">Scheduler</h3>
+    <p className="px-4 text-sm">Include option of booking appointments for pet service</p>
     </div>
   </div>
 
@@ -169,7 +169,7 @@ export const Home = () => {
                     alt="Security"
                     className="w-full h-[120px] object-cover mb-6"
                   />
-                  <p className="text-sm leading-relaxed">Your pet's data is safe with us</p>
+                  <p className="text-sm leading-relaxed">Your pet's data is safe with us.</p>
                 </Card>
               </div>
 
@@ -200,12 +200,6 @@ export const Home = () => {
         Never Miss a Vet Visit! Schedule or Set a Reminder for Your Pet's
         Next Appointment Today!
       </h2>
-
-      <Button className="mt-12 h-[67px] w-[290px] bg-[#7C5C42] hover:bg-[#6a4f38] rounded-[50px] shadow-md transition-colors duration-200">
-        <span className="text-2xl font-['Poltawski_Nowy',Helvetica] font-bold text-white text-center leading-[26px] whitespace-nowrap">
-          Get A Reminder
-        </span>
-      </Button>
     </div>
 
     <img
