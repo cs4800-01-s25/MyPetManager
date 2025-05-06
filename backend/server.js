@@ -175,6 +175,19 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
+/**
+ * VERIFY: check that the JWT in Authorization header is valid.
+ * Returns 200 + { user } if OK, or 401/403 otherwise.
+ */
+app.get(
+  "/api/auth/verify",
+  authenticateToken,
+  (req, res) => {
+    // req.user was populated by authenticateToken
+    res.json({ user: req.user });
+  }
+);
+
 // protected routes
 app.get("/api/protected", authenticateToken, (req, res) => {
   res.status(200).json({
