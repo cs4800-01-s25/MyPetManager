@@ -46,7 +46,9 @@ const appName = "Backend Express";
 // create minecraft players to let in
 const whitelist = [
   'http://localhost:5173', // local frontend
-  'http://mypetmanager.xyz' // http unsecured domain
+  'http://mypetmanager.xyz', // http unsecured domain
+  'https://mypetmanager.xyz',// Your main production domain
+  'https://www.mypetmanager.xyz' // If you use the www version too
 ]
 
 // CORS options with origin check
