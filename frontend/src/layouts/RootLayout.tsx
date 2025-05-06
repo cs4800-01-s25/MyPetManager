@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "../components/ui/button";
 
 // Navigation menu items data
@@ -11,6 +11,21 @@ const navItems = [
 ];
 
 export const RootLayout = ({ children }: { children: React.ReactNode }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Chey code
+  // Re-check token on *every* location change:
+  useEffect(() => {
+    setIsAuthenticated(!!localStorage.getItem("token"));
+  }, [location]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsAuthenticated(false);
+    navigate("/");
+  };
+  // end of chey code
   return (
     <div className="flex flex-col items-center relative bg-white overflow-hidden">
       {/* Navigation Bar */}
@@ -40,14 +55,21 @@ export const RootLayout = ({ children }: { children: React.ReactNode }) => {
               </Link>
             ))}
           </nav>
-
-          <Link to="/login">
-            <Button 
+            
+          {isAuthenticated ? (
+            <Button
+              onClick={handleLogout}
               className="px-5 py-3 bg-[#7c5c42] hover:bg-[#6a4f38] text-white rounded-2xl transition-colors font-paragraph-2"
             >
-              Login
+              Logout
             </Button>
-          </Link>
+          ) : (
+            <Link to="/login">
+              <Button className="px-5 py-3 bg-[#7c5c42] hover:bg-[#6a4f38] text-white rounded-2xl transition-colors font-paragraph-2">
+                Login
+              </Button>
+            </Link>
+          )}
         </div>
       </header>
 
@@ -62,3 +84,5 @@ export const RootLayout = ({ children }: { children: React.ReactNode }) => {
     </div>
   );
 };
+
+export default RootLayout;

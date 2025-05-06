@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";  // ← added useNavigate
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import {
@@ -20,7 +20,7 @@ interface FormData {
 }
 
 export const SignupPage = () => {
-  const navigate = useNavigate();   // ← initialize navigate
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
@@ -40,11 +40,9 @@ export const SignupPage = () => {
     }));
   };
 
-  // Form submission handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate password match
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       return;
@@ -73,11 +71,10 @@ export const SignupPage = () => {
         throw new Error(err.error || "Registration failed");
       }
 
-      const data = await response.json();
-      console.log("Signup successful!", data);
-
-      // ← On successful signup, navigate to your pet profile page
-      navigate("/mainDashboard");
+      // Redirect back to /login with a success message in location.state
+      navigate("/login", {
+        state: { successMessage: "Account Successfully Created! Please sign in." },
+      });
     } catch (err: any) {
       console.error("Signup error:", err);
       setError(err.message || "Registration failed. Please try again.");
@@ -94,8 +91,7 @@ export const SignupPage = () => {
             Join Our Community
           </CardTitle>
           <CardDescription className="text-center font-paragraph-2">
-            Create an account to manage your pet's health and connect with
-            other pet owners
+            Create an account to manage your pet's health and connect with other pet owners
           </CardDescription>
         </CardHeader>
 
@@ -138,10 +134,7 @@ export const SignupPage = () => {
                />
              </div>
             <div className="space-y-2">
-              <label
-                htmlFor="email"
-                className="font-paragraph-2 text-sm font-medium"
-              >
+              <label htmlFor="email" className="font-paragraph-2 text-sm font-medium">
                 Email Address
               </label>
               <Input
@@ -156,11 +149,9 @@ export const SignupPage = () => {
               />
             </div>
 
+            {/* Password */}
             <div className="space-y-2">
-              <label
-                htmlFor="password"
-                className="font-paragraph-2 text-sm font-medium"
-              >
+              <label htmlFor="password" className="font-paragraph-2 text-sm font-medium">
                 Password
               </label>
               <Input
@@ -175,11 +166,9 @@ export const SignupPage = () => {
               />
             </div>
 
+            {/* Confirm Password */}
             <div className="space-y-2">
-              <label
-                htmlFor="confirmPassword"
-                className="font-paragraph-2 text-sm font-medium"
-              >
+              <label htmlFor="confirmPassword" className="font-paragraph-2 text-sm font-medium">
                 Confirm Password
               </label>
               <Input
@@ -194,6 +183,7 @@ export const SignupPage = () => {
               />
             </div>
 
+            {/* Terms */}
             <div className="flex items-center space-x-2">
               <input
                 type="checkbox"
@@ -213,6 +203,7 @@ export const SignupPage = () => {
               </label>
             </div>
 
+            {/* Submit */}
             <Button
               type="submit"
               disabled={loading}
