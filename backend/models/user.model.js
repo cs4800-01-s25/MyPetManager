@@ -87,11 +87,13 @@ async function userExistsByEmail(email) {
  */
 async function getUserPublicDataById(userId) {
     try {
-        const [rows] = await pool.query(`
-            SELECT UserID, EmailAddress, UserType
+        const [rows] = await pool.query(
+          `
+            SELECT UserID, UserType, FirstName, LastName, EmailAddress
             FROM ${TABLE_NAME}
-            WHERE UserID = ?
-            `, [userId]
+            WHERE ${PRIMARY_KEY} = ?
+            `,
+          [userId]
         ); 
         return rows.length > 0 ? rows[0] : null;
     } catch(error) {

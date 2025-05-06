@@ -12,6 +12,7 @@ const pool = require("../configs/db.config"); // Import the database connection 
 // Specify the database table name and key(s) for the pet model.
 const TABLE_NAME = "pets";
 const PRIMARY_KEY = "PetID";
+const OWNER_KEY = "PetOwnerID"; // Define owner key constant
 
 // --- Pet Model Functions ---
 
@@ -117,7 +118,7 @@ async function findById(petId, ownerId) {
       `
             SELECT *
             FROM ${TABLE_NAME}
-            WHERE ${PRIMARY_KEY} = ? AND PetOwnerID = ?
+            WHERE ${PRIMARY_KEY} = ? AND ${OWNER_KEY} = ?
             `,
       [petId, ownerId]
     );

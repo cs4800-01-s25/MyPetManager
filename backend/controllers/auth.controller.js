@@ -7,7 +7,7 @@
 
 const argon2 = require("argon2");
 const jwt = require("jsonwebtoken");
-const { createUser, findUserByEmail } = require("../models/user.model");
+const { createUser, findUserByEmail, userExistsByEmail } = require("../models/user.model");
 require("../../loadEnv"); // load environment variables from .env file
 
 /**
@@ -24,7 +24,7 @@ const handleSignup = async (req, res) => {
 
   try {
     // check if user exists
-    const existingUser = await findUserByEmail(email);
+    const existingUser = await userExistsByEmail(email);
     if (existingUser) {
       return res.status(409).json({ message: "User already exists" });
     }
@@ -80,13 +80,6 @@ const handleLogin =  async (req, res) => {
           process.env.JWT_SECRET,
           { expiresIn: process.env.JWT_EXPIRES_IN }
         );
-
-        console.log("User has logged in with credentials: ");
-        console.log("user.ID: " + user.UserID);
-        console.log("user.UserType: " + user.UserType);
-        console.log("user.EmailAdress: " + user.EmailAddress);
-        console.log("🔐 JWT Created:");
-        console.log("Token:", token);
 
         // Password match + JWT Authenticated
         return res.status(200).json({
