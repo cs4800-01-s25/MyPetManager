@@ -17,7 +17,7 @@ interface Appointment {
 
 const categories = ["Vaccination", "Grooming", "Clinic Visit"];
 
-export const Scheduler = () => {
+export const ExampleScheduler = () => {
   const { appointments, setAppointments } = useAppContext();
 
   const [showForm, setShowForm] = useState(false);
@@ -161,7 +161,7 @@ const pastAppointments = [...appointments]
       </div>
 
       {/* Appointment Cards */}
-      <h2 className="text-2xl font-semibold mb-4">Upcoming Appointments</h2>
+      <h2 className="text-2xl font-semibold mb-4">Example of our Schedule Planner</h2>
 {upcomingAppointments.length === 0 && (
   <p className="text-gray-500 mb-8">No upcoming appointments.</p>
 )}

@@ -179,18 +179,11 @@ export const AdminLayout = ({ children, currentPath = "/admin" }: AdminLayoutPro
                 {userMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-10">
                     <Link
-                      to="/admin/profile"
+                      to="/profile"
                       className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                       onClick={() => setUserMenuOpen(false)}
                     >
                       Your Profile
-                    </Link>
-                    <Link
-                      to="/admin/settings"
-                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                      onClick={() => setUserMenuOpen(false)}
-                    >
-                      Settings
                     </Link>
                     <div className="border-t border-gray-100 my-1"></div>
                     <Link

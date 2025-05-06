@@ -5,7 +5,6 @@ import { Button } from "../components/ui/button";
 // Navigation menu items data
 const navItems = [
   { label: "Exploring", href: "/" },
-  { label: "My Pet Profile", href: "/pet-profile" },
   { label: "Health Portal", href: "/health-portal" },
   { label: "Schedule Appointment", href: "/schedule" },
   { label: "Join our Community", href: "/signup" },

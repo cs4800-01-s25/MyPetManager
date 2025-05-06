@@ -5,7 +5,10 @@ import { RootLayout } from "./layouts/RootLayout";
 import { AppProvider } from "./pages/AppContext";
 
 import { Home } from "./pages/Home";
-import { PetProfile } from "./pages/PetProfile";
+
+import { ExampleHealthPortal } from "./pages/ExampleHealthPortal";
+import { ExampleScheduler } from "./pages/ExampleScheduler";
+
 import { HealthPortal } from "./pages/HealthPortal";
 import { LoginPage } from "./pages/LoginPage";
 import { SignupPage } from "./pages/SignupPage";
@@ -20,12 +23,8 @@ const router = createBrowserRouter([
     element: <RootLayout><Home /></RootLayout>,
   },
   {
-    path: "/pet-profile",
-    element: <RootLayout><PetProfile /></RootLayout>,
-  },
-  {
     path: "/health-portal",
-    element: <RootLayout><HealthPortal /></RootLayout>,
+    element: <RootLayout><ExampleHealthPortal /></RootLayout>,
   },
   {
     path: "/login",
@@ -37,7 +36,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/schedule",
-    element: <RootLayout><Scheduler /></RootLayout>,
+    element: <RootLayout><ExampleScheduler /></RootLayout>,
   },
   {
     path: "/dashboard",

@@ -56,10 +56,10 @@ const Dashboard = () => {
   // Handle date selection
   const handleDateClick = (date: Date) => {
     setSelectedDate(date);
-    const appointmentsForDate = appointments.filter(appt => {
-      const apptDate = new Date(appt.date);
-      return apptDate.toDateString() === date.toDateString();
-    });
+    const selectedDay = date.toISOString().slice(0, 10);
+    const appointmentsForDate = appointments.filter(appt => 
+      new Date(appt.date).toISOString().slice(0, 10) === selectedDay
+    );
     setSelectedAppointments(appointmentsForDate);
   };
 
@@ -105,7 +105,8 @@ const Dashboard = () => {
 
               <h3 className="text-lg font-semibold mb-2">Medical History</h3>
               <ul className="list-disc list-inside text-gray-700 mb-6">
-                {pet.medicalHistory.map((item, index) => (
+                {pet.medicalHistory.map((item: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> 
+                | React.ReactFragment | React.ReactPortal | null | undefined, index: React.Key | null | undefined) => (
                   <li key={index}>{item}</li>
                 ))}
               </ul>
@@ -121,11 +122,12 @@ const Dashboard = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    {pet.vaccinations.map((vaccination, index) => (
+                    {pet.vaccinations.map((vaccinations: { name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> 
+                    | React.ReactFragment | React.ReactPortal | null | undefined; date: string | number | Date; nextDue: string | number | Date; }, index: React.Key | null | undefined) => (
                       <tr key={index}>
-                        <td className="px-4 py-2">{vaccination.name}</td>
-                        <td className="px-4 py-2">{new Date(vaccination.date).toLocaleDateString()}</td>
-                        <td className="px-4 py-2">{new Date(vaccination.nextDue).toLocaleDateString()}</td>
+                        <td className="px-4 py-2">{vaccinations.name}</td>
+                        <td className="px-4 py-2">{new Date(vaccinations.date).toLocaleDateString()}</td>
+                        <td className="px-4 py-2">{new Date(vaccinations.nextDue).toLocaleDateString()}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -163,12 +165,12 @@ const Dashboard = () => {
                   {appt.location && <p className="text-s text-black-500">{appt.location}</p>}
                 </div>
                 <div className="flex items-center">
-                  <span className={`text-sm mr-2 ${appt.status === 'Missed' ? 'text-red-500' : 'text-gray-500'}`} >
-                    {appt.status}
+                  <span className={`text-sm mr-2 ${appt.completed === false ? 'text-red-500' : 'text-gray-500'}`} >
+                    {appt.completed}
                   </span>
                   <input
                     type="checkbox"
-                    checked={appt.status !== 'Missed'}
+                    checked={appt.completed !== false}
                     readOnly
                     className="form-checkbox h-5 w-5 text-blue-600"
                   />
@@ -184,15 +186,16 @@ const Dashboard = () => {
         <h3 className="text-2xl font-semibold mb-4">Upcoming Appointments</h3>
         <Calendar
           onClickDay={handleDateClick} // When a date is clicked, show appointments for that date
-          tileClassName={({date}) => {
+          tileClassName={({ date }) => {
             const hasAppointment = appointments.some(appt => 
-              new Date(appt.date).toDateString() === date.toDateString()
+              new Date(appt.date).toISOString().slice(0, 10) === date.toISOString().slice(0, 10)
             );
-            return hasAppointment ? 'bg-blue-300' : ''; // Apply bg-blue-300 if there's an appointment
+            return hasAppointment ? 'bg-blue-300' : '';
           }}
-          tileContent={({date}) => {
-            const hasAppointment = appointments.some(appt => 
-              new Date(appt.date).toDateString() === date.toDateString()
+          
+          tileContent={({ date }) => {
+            const hasAppointment = appointments.some(appt =>
+              new Date(appt.date).toISOString().slice(0, 10) === date.toISOString().slice(0, 10)
             );
             return hasAppointment ? (
               <div className="w-full h-full bg-red-300 opacity-50"></div>

@@ -7,7 +7,7 @@ interface Vaccination {
   nextDue: string;
 }
 
-interface Pet {
+export interface Pet {
   id: number;
   name: string;
   species: string;
@@ -20,7 +20,7 @@ interface Pet {
   vaccinations: Vaccination[];
 }
 
-const samplePets: Pet[] = [
+export const samplePets: Pet[] = [
   {
     id: 1,
     name: "Mimi",
