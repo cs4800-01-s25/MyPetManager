@@ -12,6 +12,8 @@ import {
 } from "../components/ui/card";
 
 interface FormData {
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -20,6 +22,8 @@ interface FormData {
 export const SignupPage = () => {
   const navigate = useNavigate();   // ← initialize navigate
   const [formData, setFormData] = useState<FormData>({
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -57,6 +61,8 @@ export const SignupPage = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          //TODO: add first and lastname
+
           email: formData.email,
           password: formData.password,
         }),
@@ -71,7 +77,7 @@ export const SignupPage = () => {
       console.log("Signup successful!", data);
 
       // ← On successful signup, navigate to your pet profile page
-      navigate("/pet-profile");
+      navigate("/mainDashboard");
     } catch (err: any) {
       console.error("Signup error:", err);
       setError(err.message || "Registration failed. Please try again.");
@@ -101,6 +107,36 @@ export const SignupPage = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+               <label htmlFor="firstName" className="font-paragraph-2 text-sm font-medium">
+                 First Name
+               </label>
+               <Input
+                 id="firstName"
+                 name="firstName"
+                 type="text"
+                 value={formData.firstName}
+                 onChange={handleChange}
+                 placeholder="Enter your first name"
+                 required
+                 className="w-full"
+               />
+             </div>
+               <div className="space-y-2">
+               <label htmlFor="lastName" className="font-paragraph-2 text-sm font-medium">
+                 Last Name
+               </label>
+               <Input
+                 id="lastName"
+                 name="lastName"
+                 type="text"
+                 value={formData.lastName}
+                 onChange={handleChange}
+                 placeholder="Enter your last name"
+                 required
+                 className="w-full"
+               />
+             </div>
             <div className="space-y-2">
               <label
                 htmlFor="email"

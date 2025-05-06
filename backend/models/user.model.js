@@ -10,7 +10,7 @@ const pool = require("../configs/db.config"); // Import the database connection 
 
 // Specify the database table name and key(s) for the user model.
 const TABLE_NAME = "users"; // The name of the database table for users
-const PRIMARY_KEY = "user_id"; // The primary key for the users table
+const PRIMARY_KEY = "UserID"; // The primary key for the users table
 
 
 // --- User Model Functions ---
@@ -37,11 +37,12 @@ async function createUser(email, hashedPassword) {
 
 /**
  * Finds a user by their email address in the database.
+ * This is used for logging in, in which password is returned
  * @param {string} email - The email address of the user to find.
  * @returns {Promise<object|null>} A promise that resolves to the user object if found, otherwise null.
  */
 async function findUserByEmail(email) {
-    console.log("findUserByEmail called: " + email);
+    console.log("Model: findUserByEmail called: " + email);
     try {
         const [rows] = await pool.query(`
             SELECT * 
@@ -56,6 +57,50 @@ async function findUserByEmail(email) {
     }
 }
 
+/**
+ * Finds a user by their email address in the database.
+ * This is used for checking if user exixts for registering in
+ * TODO ADD
+ * @param {string} email - The email address of the user to find.
+ * @returns {Promise<object|null>} A promise that resolves to the user object if found, otherwise null.
+ */
+async function userExistsByEmail(email) {
+    try {
+        const [rows] = await pool.query(`
+            SELECT 1
+            FROM ${TABLE_NAME}
+            WHERE EmailAddress = ?
+            `, [email]
+        );
+        return rows.length > 0 ? rows[0] : null;
+    } catch (error) {
+      console.error("User Model: Error checking user by email:", error);
+      throw error; // Rethrow the error for further handling
+    }
+}
+
+/**
+ * fetching user info after login, in authenticated dashboards, etc.
+ * Use for public dashboards non-senstivite info, NO passwords
+ * @param {number} userId - The ID of the user to find.
+ * @returns {Promise<object|null>} A promise that resolves to the user object if found, otherwise null.
+ */
+async function getUserPublicDataById(userId) {
+    try {
+        const [rows] = await pool.query(
+          `
+            SELECT UserID, UserType, FirstName, LastName, EmailAddress
+            FROM ${TABLE_NAME}
+            WHERE ${PRIMARY_KEY} = ?
+            `,
+          [userId]
+        ); 
+        return rows.length > 0 ? rows[0] : null;
+    } catch(error) {
+        console.error("User Model: Error finding public user info by ID:", error);
+        throw error; // Rethrow the error for further handling
+    }
+}
 
 /**
  * Finds a user by their ID in the database.
@@ -63,8 +108,14 @@ async function findUserByEmail(email) {
  * @returns {Promise<object|null>} A promise that resolves to the user object if found, otherwise null.
  */
 async function findUserById(userId) {
+    console.log("findUserByID called: " + userId);
     try {
-        const [rows] = await pool.query(`SELECT * FROM ${TABLE_NAME} WHERE ${PRIMARY_KEY} = ?`, [userId]);
+        const [rows] = await pool.query(`
+            SELECT * 
+            FROM ${TABLE_NAME} 
+            WHERE ${PRIMARY_KEY} = ?
+            `, [userId]);
+        console.log("User Object Found: ", rows[0]);
         return rows.length > 0 ? rows[0] : null; // Return the first user found or null if none found
     } catch (error) {
         console.error("Error finding user by ID:", error);
@@ -96,5 +147,7 @@ module.exports = {
     createUser,
     findUserByEmail,
     findUserById,
+    userExistsByEmail,
+    getUserPublicDataById,
     updatePassword
 };

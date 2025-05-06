@@ -2,7 +2,10 @@
 import React, { useState, useEffect } from "react";
 
 interface userInfo {
+  userType: string;
   userId: string;
+  firstName: string;
+  lastName: string
   email: string;
   accessToken: string;
 }
@@ -13,6 +16,8 @@ export const MainDashboard = () => {
 
   // Retrieve the user and token from localStorage  
   useEffect(() => {
+    // if you see this twice, its fine, its for testing purposes, when in build, it should be fine
+     console.log("🚨 useEffect triggered in Dashboard");
     // log this shit
     console.log("MainDashboard component mounted");
     console.log("Stored user:", localStorage.getItem("user"));
@@ -33,7 +38,7 @@ export const MainDashboard = () => {
     // Fetch user-specific data from the protected route
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:4350/api/dashboard", {
+        const response = await fetch("http://localhost:4350/api/users/dashboard", {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${token}`,  // Send token in Authorization header
@@ -65,8 +70,9 @@ export const MainDashboard = () => {
 
   return (
     <div>
-      <h1>Welcome to Your Dashboard, {userInfo?.email}</h1>
+      <h1>Welcome to Your Dashboard, {userInfo?.firstName}</h1>
       <p>Your User ID: {userInfo?.userId}</p>
+      <p>Your User Type: {userInfo?.userType}</p>
     </div>
   );
 };

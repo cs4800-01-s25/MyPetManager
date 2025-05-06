@@ -48,7 +48,7 @@ const insurance: Insurance = {
   policyNumber: "31271402",
 };
 
-export const HealthPortal = () => {
+export const ExampleHealthPortal = () => {
   const [pets, setPets] = useState<Pet[]>(userPets);
   const [showPetFields, setShowPetFields] = useState<boolean>(false);
   const [currentPet, setCurrentPet] = useState<Pet | null>(null);
@@ -462,7 +462,7 @@ export const HealthPortal = () => {
             className="absolute inset-0 opacity-0"
           />
         </div>
-        <h1 className="text-3xl font-['Poltawski_Nowy',Helvetica]">User 1</h1>
+        <h1 className="text-3xl font-['Poltawski_Nowy',Helvetica]">Example of Health Portal</h1>
       </div>
 
       {/* Sidebar Navigation */}
