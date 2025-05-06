@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import {
@@ -18,13 +18,16 @@ interface FormData {
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const location = useLocation() as { state?: { successMessage?: string } };
+  const successMessage = location.state?.successMessage;
+
   const [formData, setFormData] = useState<FormData>({ email: "", password: "" });
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -45,8 +48,6 @@ const LoginPage = () => {
       }
 
       const { user, accessToken } = await response.json();
-      console.log("Login success!", user, accessToken);
-
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("token", accessToken);
 
@@ -72,6 +73,13 @@ const LoginPage = () => {
         </CardHeader>
 
         <CardContent>
+          {/* Newly added success message */}
+          {successMessage && (
+            <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-800 rounded-md text-sm text-center">
+              {successMessage}
+            </div>
+          )}
+
           {error && (
             <div className="mb-4 p-3 bg-destructive/10 border border-destructive text-destructive rounded-md text-sm">
               {error}
@@ -79,6 +87,7 @@ const LoginPage = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Email */}
             <div className="space-y-2">
               <label htmlFor="email" className="font-paragraph-2 text-sm font-medium">
                 Email Address
@@ -95,6 +104,7 @@ const LoginPage = () => {
               />
             </div>
 
+            {/* Password */}
             <div className="space-y-2">
               <label htmlFor="password" className="font-paragraph-2 text-sm font-medium">
                 Password
@@ -111,6 +121,7 @@ const LoginPage = () => {
               />
             </div>
 
+            {/* Remember & Forgot */}
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <input
@@ -122,12 +133,12 @@ const LoginPage = () => {
                   Remember me
                 </label>
               </div>
-
               <Link to="/forgot-password" className="font-paragraph-2 text-sm text-brown hover:underline">
                 Forgot Password?
               </Link>
             </div>
 
+            {/* Submit */}
             <Button
               type="submit"
               disabled={loading}

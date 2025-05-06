@@ -6,7 +6,7 @@ import { Home } from "./pages/Home";
 import { PetProfile } from "./pages/PetProfile";
 import { HealthPortal } from "./pages/HealthPortal";
 import  LoginPage  from "./pages/LoginPage"
-import { SignupPage } from "./pages/SignupPage"
+import  SignupPage  from "./pages/SignupPage"
 import { Scheduler } from "./pages/Scheduler"
 import { MainDashboard } from "./pages/MainDashboard";
 
