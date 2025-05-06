@@ -1,5 +1,5 @@
 /**
- * @file This stores our general configuration for a local database
+ * @file This stores our test configuration for a local database
  * Server Port: 4350, database mySQL Server is on 3306.
  * @author Gian David Marquez and Chey C.
  */
