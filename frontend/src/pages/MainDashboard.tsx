@@ -38,7 +38,7 @@ export const MainDashboard = () => {
     // Fetch user-specific data from the protected route
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:4350/api/users/dashboard", {
+        const response = await fetch("https://mypetmanager.xyz/api/users/dashboard", {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${token}`,  // Send token in Authorization header

@@ -36,7 +36,7 @@ export const LoginPage = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:4350/api/auth/login", {
+      const response = await fetch("https://mypetmanager.xyz/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),  // this structured as email: nextline passwor
