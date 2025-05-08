@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "../pages/AppContext";
 import AppointmentSection from "../components/dashboard/AppointmentSection";
+import AddPetModal from "../components/pets/AddPetModal"; // Import the modal
+
 export const MainDashboard = () => {
   // This local state is for UI interaction (which pet is selected), it's fine to keep.
   const [selectedPetId, setSelectedPetId] = useState<number | null>(null);
-
+  const [isAddPetModalOpen, setIsAddPetModalOpen] = useState(false); 
   // Get user, appointments, and now pet-related data from AppContext
   const { 
     user, 
     appointments, 
     pets,                 // This will replace hardcodedPets
     isLoadingPets,        // True when pets are being fetched
-    fetchPetsError        // Contains error message if fetching pets failed
-    // fetchAllPetsByOwnerId // You can use this for a "retry" button if needed
+    fetchPetsError,
+    fetchAllPetsByOwnerId
   } = useAppContext();
 
   // Auth check: Retrieve the user and token from localStorage
@@ -37,15 +39,25 @@ export const MainDashboard = () => {
 
   // Determine pets to display in the grid (e.g., first 3 as per your original logic)
   // Use `pets` from context now.
-  const maxPetsInGrid = 3;
+ const maxPetsInGrid = 3;
   const visiblePetsInGrid = pets.slice(0, maxPetsInGrid);
-  // Calculate empty slots only if the user is a PetOwner and pets have loaded
   const emptySlots = user?.userType === 'PetOwner' && !isLoadingPets && !fetchPetsError 
                      ? Math.max(0, maxPetsInGrid - visiblePetsInGrid.length) 
                      : 0;
-
-  // Find details for the selected pet from the context `pets` array
   const selectedPetDetails = pets.find(pet => pet.id === selectedPetId);
+
+  const openAddPetHandler = () => {
+    setIsAddPetModalOpen(true);
+  };
+
+  const closeAddPetHandler = () => {
+    setIsAddPetModalOpen(false);
+  };
+
+  const petAddedHandler = () => {
+    fetchAllPetsByOwnerId(); // Refresh the list from AppContext
+    // You could also show a success notification here
+  };
 
   return (
     <div className="p-6">
@@ -66,40 +78,27 @@ export const MainDashboard = () => {
         <section className="mb-12">
           <h2 className="text-2xl font-semibold mb-4">My Pets</h2>
 
-          {/* Handle Pet Loading State */}
-          {isLoadingPets && (
-            <div className="text-center text-gray-600 mt-4">Loading your pets...</div>
-          )}
+          {/* ... (isLoadingPets and fetchPetsError rendering) ... */}
+          {isLoadingPets && <div className="text-center text-gray-600 mt-4">Loading your pets...</div>}
+          {fetchPetsError && !isLoadingPets && <div className="text-center text-red-500 mt-4 p-3 border border-red-300 bg-red-50 rounded-md"><p>Error: {fetchPetsError}</p></div>}
 
-          {/* Handle Pet Fetching Error State */}
-          {fetchPetsError && !isLoadingPets && (
-            <div className="text-center text-red-500 mt-4 p-3 border border-red-300 bg-red-50 rounded-md">
-              <p>Error loading pets: {fetchPetsError}</p>
-              {/* Optional: Add a button to retry fetching pets
-              <button 
-                onClick={() => fetchAllPetsByOwnerId()} 
-                className="mt-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-              >
-                Try Again
-              </button> 
-              */}
-            </div>
-          )}
 
-          {/* Display Pets or "Add Pet" message if not loading and no error */}
           {!isLoadingPets && !fetchPetsError && (
             <>
               {pets.length === 0 ? (
                 <div className="text-center text-gray-600 mt-4">
                   <p>You haven't added any pets yet.</p>
-                  <button className="mt-4 px-4 py-2 bg-[#7c5c42] text-white rounded hover:bg-[#6a4f38]">
+                  <button 
+                    onClick={openAddPetHandler} // <<<--- Open modal
+                    className="mt-4 px-4 py-2 bg-[#7c5c42] text-white rounded hover:bg-[#6a4f38]"
+                  >
                     + Add Your First Pet
                   </button>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {/* Display pet cards from context data */}
                   {visiblePetsInGrid.map((pet) => (
+                    // Your Pet Card JSX
                     <div
                       key={pet.id}
                       className={`bg-white rounded-lg shadow-sm overflow-hidden cursor-pointer transition-all duration-200 ${
@@ -108,22 +107,16 @@ export const MainDashboard = () => {
                       onClick={() => setSelectedPetId(selectedPetId === pet.id ? null : pet.id)}
                     >
                       <img
-                        src={pet.imageUrl || 'https://via.placeholder.com/300x200?text=No+Image+Available'} // Use imageUrl from context
+                        src={pet.imageUrl || 'https://via.placeholder.com/300x200?text=No+Image'}
                         alt={pet.name}
                         className="w-full h-48 object-cover"
                       />
                       <div className="p-4 text-center">
                         <h3 className="text-xl font-semibold">{pet.name}</h3>
-                        <p className="text-gray-600">
-                          {pet.breed || 'Unknown Breed'} {pet.species}
-                        </p>
+                        <p className="text-gray-600">{pet.breed || 'N/A'} {pet.species}</p>
                         <p className="text-gray-500 text-sm">
-                          Age: {pet.age ?? 'N/A'} year{pet.age !== 1 ? "s" : ""} • Weight: {pet.weight ? `${pet.weight} lbs` : 'N/A'}
+                          Age: {pet.age ?? 'N/A'} yrs • Weight: {pet.weight ? `${pet.weight} lbs` : 'N/A'}
                         </p>
-                        {/* Description is now part of the Pet interface from context
-                        {pet.description && (
-                           <p className="mt-2 text-sm text-gray-700 truncate">{pet.description}</p>
-                        )} */}
                       </div>
                     </div>
                   ))}
@@ -132,8 +125,8 @@ export const MainDashboard = () => {
                   {Array.from({ length: emptySlots }).map((_, idx) => (
                     <div
                       key={`add-pet-${idx}`}
-                      // TODO: This should navigate to an "Add Pet" form/page
-                      className="flex items-center justify-center h-full border-2 border-dashed border-gray-300 rounded-lg text-[#7c5c42] font-semibold text-lg hover:border-[#7c5c42] cursor-pointer transition-all duration-200 min-h-[200px] md:min-h-[250px]" // Added min-height for visual consistency
+                      onClick={openAddPetHandler} // <<<--- Open modal from here
+                      className="flex items-center justify-center h-full border-2 border-dashed border-gray-300 rounded-lg text-[#7c5c42] font-semibold text-lg hover:border-[#7c5c42] cursor-pointer transition-all duration-200 min-h-[200px] md:min-h-[250px]"
                     >
                       + Add Pet
                     </div>
@@ -144,7 +137,6 @@ export const MainDashboard = () => {
           )}
         </section>
       )}
-
       {/* Selected Pet Details Section - using selectedPetDetails derived from context pets */}
       {selectedPetDetails && user?.userType === 'PetOwner' && (
         <div className="bg-white rounded-lg shadow-sm mt-10 p-6">
@@ -219,6 +211,12 @@ export const MainDashboard = () => {
 
       {/* Render AppointmentSection based on user type or other logic */}
       {user?.userType === "PetOwner" && <AppointmentSection />} 
+      {/* Render the AddPetModal */}
+      <AddPetModal 
+        isOpen={isAddPetModalOpen}
+        onClose={closeAddPetHandler}
+        onPetAdded={petAddedHandler}
+      />
     </div>
   );
 };
