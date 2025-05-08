@@ -55,10 +55,8 @@ export const LoginPage = () => {
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("token", accessToken);
 
-      //TODO: CHANGE THIS TO PROTECTED ROUTE, RIGHT NOW GOING TO SAMPLE
-      navigate("/dashboard", {
-        state: { firstName: formData.firstName },
-      });
+      //TODO: CHANGED THIS TO PROTECTED ROUTE
+      navigate("/mainDashboard");
     } catch (err: any) {
       console.error("Login error:", err);
       setError(err.message || "Login failed. Please try again.");
