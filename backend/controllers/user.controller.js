@@ -83,6 +83,7 @@ const getCurrentUser = async (req, res) => {
       userType: user.UserType,
       petOwnerId: petOwnerId,
     });
+    console.log("Controller: petowner id ", petOwnerId)
   } catch (error) {
     console.error("Error fetching current user:", error);
     res.status(500).json({ message: "Server error" });

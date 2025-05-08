@@ -6,7 +6,7 @@ interface User {
   firstName: string;
   lastName: string;
   email: string;
-
+  petOwnerId?: string; // optional, only exists if userType === "PetOwner"
 }
 
 interface Pet {
@@ -129,26 +129,34 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     ]);
 
     useEffect(() => {
-      const token = localStorage.getItem("token");
-      if (!token) return;
+  const token = localStorage.getItem("token");
+  if (!token) return;
 
-      const fetchUser = async () => {
-        try {
-          const res = await fetch("http://localhost:4350/api/users/me", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          if (!res.ok) throw new Error("Failed to fetch user info");
-          const data = await res.json();
-          setUser(data);
-        } catch (error) {
-          console.error("Failed to fetch user:", error);
-        }
-      };
+  const fetchUser = async () => {
+    try {
+      const res = await fetch("http://localhost:4350/api/users/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!res.ok) throw new Error("Failed to fetch user info");
+      const data = await res.json();
 
-      fetchUser();
-    }, []);
+      setUser({
+        userId: data.userId,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        userType: data.userType,
+        petOwnerId: data.petOwnerId || undefined,
+      });
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
+  };
+
+  fetchUser();
+}, []);
 
     return (
       <AppContext.Provider value={{ user, setUser, pets, setPets, appointments, setAppointments }}>

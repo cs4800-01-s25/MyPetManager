@@ -1,13 +1,6 @@
-import React, { useState, useEffect } from "react";
-
-interface userInfo {
-  userType: string;
-  userId: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  accessToken: string;
-}
+import React, { useState } from "react";
+import { useAppContext } from "../pages/AppContext";
+import Calendar from 'react-calendar';
 
 const hardcodedPets = [
   {
@@ -48,67 +41,45 @@ const hardcodedPets = [
   }
 ];
 
+type CalendarValue = Date | Date[] | null;
+
 export const MainDashboard = () => {
-  const [userInfo, setUserInfo] = useState<userInfo | null>(null);
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedPet, setSelectedPet] = useState<number | null>(null);
-
+  const { user, appointments} = useAppContext();
+  // add old hooks
+  const [selectedDate, setSelectedDate] = useState<CalendarValue>(null);
+  const [selectedAppointments, setSelectedAppointments] = useState<any[]>([]);
+  
+ // Handle date selection
+  const handleDateClick = (date: Date) => {
+    setSelectedDate(date);
+    const selectedDay = date.toISOString().slice(0, 10);
+    const appointmentsForDate = appointments.filter(appt => 
+      new Date(appt.date).toISOString().slice(0, 10) === selectedDay
+    );
+    setSelectedAppointments(appointmentsForDate);
+  };
 
   // Retrieve the user and token from localStorage
-  useEffect(() => {
-    // if you see this twice, its fine, its for testing purposes, when in build, it should be fine
-    console.log("🚨 useEffect triggered in Dashboard");
-    // log this shit
-    console.log("MainDashboard component mounted");
-    console.log("Stored token:", localStorage.getItem("token"));
+  const token = localStorage.getItem("token");
 
-    const storedToken = localStorage.getItem("token");
-
-    if (!storedToken) {
-      setError("You must be logged in to access the dashboard.");
-      setLoading(false);
-      return; //add navigation
-    }
-
-    // Parse the user information
-    const token = storedToken;
-
-    // Fetch user-specific data from the protected route
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:4350/api/users/dashboard",
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`, // Send token in Authorization header
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (!response.ok) throw new Error("Failed to fetch dashboard data.");
-
-        const data = await response.json();
-        setUserInfo(data); // Assuming data contains the user info
-      } catch (err: any) {
-        setError(err.message || "Error fetching data.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
+  // Case 1: No token at all → not logged in
+  if (!token) {
+    return <div className="text-red-500">You must be logged in to view the dashboard.</div>;
   }
 
-  if (error) {
-      if (error) return <div className="text-red-500">{error}</div>;
+  // Case 2: Token exists, but user is not loaded yet → show loading
+  if (!user) {
+    return <div>Loading user...</div>;
   }
+
+  // Case 3: Token exists, but user load failed (optional deeper check)
+  if (!user.userId) {
+    return <div className="text-red-500">Failed to load user profile.</div>;
+  }
+
 
   const visiblePets = hardcodedPets.slice(0, 3);
   const emptySlots = 3 - visiblePets.length;
@@ -116,11 +87,15 @@ export const MainDashboard = () => {
   return (
     <div className="p-6">
       <h1 className="text-3xl font-['Poltawski_Nowy',Helvetica] font-normal mb-4">
-        Welcome to Your Dashboard, {userInfo?.firstName}
+        Welcome to Your Dashboard, {user?.firstName}
       </h1>
-      <p>Your User ID: {userInfo?.userId}</p>
-      <p>Your User Type: {userInfo?.userType}</p>
-
+      <p>Your User ID: {user?.userId}</p>
+      <p>Your User Type: {user?.userType}</p>
+      <p>Your role: {user?.userType}</p>
+      {user?.userType === "PetOwner" && (
+        <p>Your PetOwner ID: {user.petOwnerId}</p>
+      )}
+  <section className="mb-12">
       <h2 className="text-2xl font-semibold mb-4">My Pets</h2>
 
       {visiblePets.length === 0 ? (
@@ -166,6 +141,80 @@ export const MainDashboard = () => {
               className="flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg text-[#7c5c42] font-semibold text-lg hover:border-[#7c5c42] cursor-pointer transition-all duration-200"
             >
               + Add Pet
+            </div>
+          ))}
+          
+        </div>
+      )}
+</section>
+    {/* Appointments Section */}
+      <section className="mb-10">
+        <h3 className="text-2xl font-semibold mb-4">Upcoming Appointments</h3>
+        {appointments.length === 0 ? (
+          <p className="text-gray-500">No appointments scheduled.</p>
+        ) : (
+          <div className="bg-white rounded-md shadow-md p-4">
+            {appointments.map((appt) => (
+              <div
+                key={appt.id}
+                className="flex justify-between items-center border-b last:border-b-0 py-3"
+              >
+                <div>
+                  <p className="font-medium">{appt.title}</p>
+                  <p className="text-sm text-gray-500">{appt.date} at {appt.time}</p>
+                  {appt.location && <p className="text-s text-black-500">{appt.location}</p>}
+                </div>
+                <div className="flex items-center">
+                  <span className={`text-sm mr-2 ${appt.completed === false ? 'text-red-500' : 'text-gray-500'}`} >
+                    {appt.completed}
+                  </span>
+                  <input
+                    type="checkbox"
+                    checked={appt.completed !== false}
+                    readOnly
+                    className="form-checkbox h-5 w-5 text-blue-600"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Calendar Section */}
+      <div className="mb-10">
+        <h3 className="text-2xl font-semibold mb-4">Upcoming Appointments</h3>
+        <Calendar
+          onClickDay={handleDateClick} // When a date is clicked, show appointments for that date
+          tileClassName={({ date }) => {
+            const hasAppointment = appointments.some(appt => 
+              new Date(appt.date).toISOString().slice(0, 10) === date.toISOString().slice(0, 10)
+            );
+            return hasAppointment ? 'bg-blue-300' : '';
+          }}
+          
+          tileContent={({ date }) => {
+            const hasAppointment = appointments.some(appt =>
+              new Date(appt.date).toISOString().slice(0, 10) === date.toISOString().slice(0, 10)
+            );
+            return hasAppointment ? (
+              <div className="w-full h-full bg-red-300 opacity-50"></div>
+            ) : null;
+          }}
+        />
+      </div>
+
+      {/* Appointment Details for Selected Date */}
+      {selectedAppointments.length > 0 && (
+        <div className="bg-white rounded-lg shadow-md p-4 mt-6">
+          <h3 className="text-xl font-semibold">
+            Appointments for {selectedDate && Array.isArray(selectedDate) ? '' : selectedDate?.toLocaleDateString()}
+          </h3>
+          {selectedAppointments.map((appt) => (
+            <div key={appt.id} className="border-b last:border-b-0 py-3">
+              <p className="font-medium">{appt.title}</p>
+              <p className="text-sm text-gray-500">Time: {appt.time}</p>
+              <p className="text-sm text-gray-500">Location: {appt.location}</p>
             </div>
           ))}
         </div>
