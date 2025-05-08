@@ -128,7 +128,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
     const fetchInitialUserData = async () => {
       try {
-        const res = await fetch("http://localhost:4350/api/users/me", {
+        const res = await fetch("https://mypetmanager.xyz/api/users/me", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

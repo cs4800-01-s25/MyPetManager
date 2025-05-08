@@ -22,7 +22,7 @@ interface PetApiResponseItem {
   }[];
 }
 
-const BASE_URL = "http://localhost:4350/api";
+const BASE_URL = "https://mypetmanager.xyz/api";
 
 interface ApiErrorResponse {
   message: string;

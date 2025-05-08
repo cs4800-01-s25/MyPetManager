@@ -55,7 +55,7 @@ export const SignupPage = () => {
       console.log("Sign up form submitted!");
       console.log("Signup attempt for:", formData.email);
 
-      const response = await fetch("http://localhost:4350/api/auth/signup", {
+      const response = await fetch("https://mypetmanger.xyz/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
