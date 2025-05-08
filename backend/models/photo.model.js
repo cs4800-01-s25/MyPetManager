@@ -14,12 +14,13 @@ const TABLE_NAME = "photos";
  * @param {object} photoData - Object containing photo details (UserID or PetID, S3Key, IsPrimary, ContentType).
  * @returns {Promise<number>} The ID of the newly created photo record.
  */
-async function createPhoto(photoData) {
-  const { UserID, PetID, S3Key, IsPrimary, ContentType } = photoData;
+async function createPetPhoto(photoData) {
+  const {PetID, S3Key, IsPrimary, ContentType } = photoData;
   try {
-    const [result] = await pool.query(
-      `INSERT INTO ${TABLE_NAME} (UserID, PetID, S3Key, IsPrimary, ContentType, UploadedAt) VALUES (?, ?, ?, ?, ?, NOW())`,
-      [UserID || null, PetID || null, S3Key, IsPrimary, ContentType]
+    const [result] = await pool.query(`
+        INSERT INTO ${TABLE_NAME}
+        (PetID, S3Key, IsPrimary, ContentType) VALUES ( ?, ?, ?, ?, )`
+        , [PetID || null, S3Key, IsPrimary, ContentType]
     );
     return result.insertId;
   } catch (error) {
@@ -121,10 +122,10 @@ async function getPhotoById(photoId) {
 
 
 module.exports = {
-  createPhoto,
+  createPetPhoto,
   unsetPrimaryUserPhoto,
   unsetPrimaryPetPhoto, // New
-  getPhotosByUserId,    // New
-  getPhotosByPetId,     // New
-  getPhotoById,         // New
+  getPhotosByUserId, // New
+  getPhotosByPetId, // New
+  getPhotoById, // New
 };
