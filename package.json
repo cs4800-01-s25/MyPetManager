@@ -11,6 +11,7 @@
     "start": "concurrently --kill-others \"npm run start -w backend\" \"npm run build -w frontend\"",
     "stop": "npm stop --workspaces",
     "dev": "concurrently --kill-others \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "api": "concurrently --kill-others \"npm run start -w backend\"",
     "test": "jest"
   },
   "repository": {

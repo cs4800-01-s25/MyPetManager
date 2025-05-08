@@ -42,11 +42,11 @@ console.log("Testing Server connection...", {
 
 // 2) Basic config
 const app = express();
+app.set('trust proxy', 1);
 const appName = "Backend Express";
 // create minecraft players to let in
 const whitelist = [
   'http://localhost:5173', // local frontend
-  'http://mypetmanager.xyz', // http unsecured domain
   'https://mypetmanager.xyz',// Your main production domain
   'https://www.mypetmanager.xyz' // If you use the www version too
 ]
@@ -61,7 +61,7 @@ const corsOptions = {
       callback(new Error("Not allowed by CORS"));
     }
   },
-  credentials: true // Allow cookies if needed
+  credentials: true, // Allow cookies if needed
 };
 
 // - JSON body parsing so we can read req.body

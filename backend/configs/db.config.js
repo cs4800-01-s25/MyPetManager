@@ -14,7 +14,7 @@ const pool = mysql
     host: process.env.AWS_TEST_HOST,
     user: process.env.AWS_TEST_USER,
     password: process.env.AWS_TEST_PASSWORD,
-    database: process.env.AWS_PROD_DATABASE,
+    database: process.env.AWS_TEST_DATABASE,
     port: process.env.MYSQL_PORT,
   })
   .promise(); // .promise() is used to convert the callback-based API of mysql2 to a promise-based API, allowing for easier async/await usage.
@@ -25,7 +25,7 @@ console.log("Testing MySQL AWS .env connection...", {
   host: process.env.AWS_TEST_HOST,
   user: process.env.AWS_TEST_USER,
   password: process.env.AWS_TEST_PASSWORD,
-  database: process.env.AWS_PROD_DATABASE,
+  database: process.env.AWS_TEST_DATABASE,
   port: process.env.MYSQL_PORT,
 });
 // Export the pool object so it can be used in other files. This allows us to use the same connection pool across different parts of the application, improving performance and resource management.
