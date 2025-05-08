@@ -172,14 +172,14 @@ export const AdminLayout = ({ children, currentPath = "/admin" }: AdminLayoutPro
                   <div className="w-8 h-8 rounded-full bg-[#7c5c42] flex items-center justify-center text-white">
                     <User size={18} />
                   </div>
-                  <span className="ml-2 mr-1 hidden md:block">{user?.name || 'User'}</span> {/* Dynamic User Name */}
+                  <span className="ml-2 mr-1 hidden md:block">{user?.firstName || 'User'}</span> {/* Dynamic User Name */}
                   <ChevronDown size={16} className="hidden md:block" />
                 </button>
                 
                 {userMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-10">
                     <Link
-                      to="/profile"
+                      to="/admin/profile"
                       className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                       onClick={() => setUserMenuOpen(false)}
                     >
@@ -187,7 +187,7 @@ export const AdminLayout = ({ children, currentPath = "/admin" }: AdminLayoutPro
                     </Link>
                     <div className="border-t border-gray-100 my-1"></div>
                     <Link
-                      to="/logout"
+                      to="/"
                       className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                       onClick={() => setUserMenuOpen(false)}
                     >

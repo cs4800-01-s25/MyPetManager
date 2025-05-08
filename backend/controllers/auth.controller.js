@@ -32,11 +32,11 @@ const handleSignup = async (req, res) => {
     
   // Hash the password using argon2
     const hashedPassword = await argon2.hash(password);
-      console.log("Controlker: Password hashed for email: ${email}");
+      console.log("Controller: Password hashed for email: " + email);
 
     // Store the user in the database
     await createUser(email, hashedPassword);
-    console.log("Controller: User Created sucessfully for email: ${email}")
+    console.log("Controller: User Created sucessfully for email: " + email)
 
     res.status(201).json({ message: "User created successfully" });
   } catch (error) {

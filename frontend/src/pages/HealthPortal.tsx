@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "../components/ui/button";
 import { samplePets } from "./MyPetProfile";
+import { useLocation } from "react-router-dom";
 
 // Define Pet and Insurance interfaces
 interface Pet {
@@ -49,6 +50,8 @@ const insurance: Insurance = {
 };
 
 export const HealthPortal = () => {
+  const location = useLocation();
+  const firstName = location.state?.firstName || "User";
   const [pets, setPets] = useState<Pet[]>(userPets);
   const [showPetFields, setShowPetFields] = useState<boolean>(false);
   const [currentPet, setCurrentPet] = useState<Pet | null>(null);
@@ -462,7 +465,7 @@ export const HealthPortal = () => {
             className="absolute inset-0 opacity-0"
           />
         </div>
-        <h1 className="text-3xl font-['Poltawski_Nowy',Helvetica]">User 1</h1>
+        <h1 className="text-3xl font-['Poltawski_Nowy',Helvetica]">Hello, {firstName}</h1>
       </div>
 
       {/* Sidebar Navigation */}

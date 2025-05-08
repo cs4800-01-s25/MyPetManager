@@ -60,7 +60,8 @@ export const SignupPage = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           //TODO: add first and lastname
-
+          firstName: formData.firstName,
+          lastName: formData.lastName,
           email: formData.email,
           password: formData.password,
         }),

@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 
 
 interface FormData {
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
 }
@@ -16,6 +18,8 @@ export const LoginPage = () => {
   const successMessage = location.state?.successMessage;
 
    const [formData, setFormData] = useState<FormData>({
+    firstName: "",
+    lastName: "",
     email: "",
     password: ""
   });
@@ -52,7 +56,9 @@ export const LoginPage = () => {
       localStorage.setItem("token", accessToken);
 
       //TODO: CHANGE THIS TO PROTECTED ROUTE, RIGHT NOW GOING TO SAMPLE
-      navigate("/dashboard");
+      navigate("/dashboard", {
+        state: { firstName: formData.firstName },
+      });
     } catch (err: any) {
       console.error("Login error:", err);
       setError(err.message || "Login failed. Please try again.");
