@@ -45,13 +45,13 @@ const hardcodedPets = [
 type CalendarValue = Date | Date[] | null;
 
 const Dashboard = () => {
-  const { pets, appointments } = useAppContext(); // Fetch from context
+  const { appointments } = useAppContext(); // Fetch from context
   const [selectedPet, setSelectedPet] = useState<number | null>(null);
   const [selectedDate, setSelectedDate] = useState<CalendarValue>(null);
   const [selectedAppointments, setSelectedAppointments] = useState<any[]>([]);
 
   // Use pets from context, but fallback to hardcodedPets if empty
-  const displayPets = pets.length > 0 ? pets : hardcodedPets;
+  const displayPets = hardcodedPets;
 
   // Handle date selection
   const handleDateClick = (date: Date) => {

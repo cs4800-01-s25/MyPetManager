@@ -13,6 +13,8 @@ const {
   deletePet,
 } = require("../models/pet.model");
 
+const { getPetOwnerIDByUserId } = require("../models/petOwner.model");
+
 
 // this assumes the authenicate token can get user.id
 /**
@@ -44,10 +46,51 @@ const handleCreatePet = async (req, res) => {
  * @returns {Promise<void>} Sends a response and does not return a value.
  */
 const handleGetAllPets = async (req, res) => { // Renamed
-    // Extract owner ID from the authenticated user payload
-    const ownerId = req.user.userId; 
+    try {
+    const userId = req.user.userId; // From JWT via authenticateToken middleware
 
+    if (!userId) {
+      return res.status(403).json({ message: "User ID not found in token." });
+    }
 
+    // 1. Get PetOwnerID from UserID
+    const petOwner = await getPetOwnerIDByUserId(userId); // You'll need to create this model function
+    
+    if (!petOwner || !petOwner.PetOwnerID) {
+      // This user might be an Admin or not fully set up as a PetOwner
+      // Or it could be an error if they are expected to be a PetOwner
+      // console.log(`No PetOwnerID found for UserID: ${userId}. This user might not be a PetOwner or an error occurred.`);
+      return res.status(200).json([]); // Return empty array if user is not a pet owner or has no pets
+    }
+
+    const petOwnerId = petOwner.PetOwnerID;
+
+    // 2. Get pets using PetOwnerID
+    const petsFromDb = await getAllPetsByOwnerId(petOwnerId);
+
+    // 3. Format pets to match frontend expectations (PetApiResponseItem)
+    const formattedPets = petsFromDb.map(pet => {
+      // Ensure your PetApiResponseItem and Pet interface in AppContext align with these fields
+      return {
+        id: pet.PetID, // Assuming your DB column is PetID
+        petOwnerID: pet.PetOwnerID,
+        name: pet.Name,
+        dateOfBirth: pet.DateOfBirth, // Ensure correct date formatting if needed, though usually sent as ISO string
+        species: pet.Species,
+        breed: pet.Breed,
+        sex: pet.Sex,
+        weight: parseFloat(pet.Weight) || null, // Ensure Weight is a number
+        // --- Fields requiring more logic/data ---
+        // imageUrl: pet.PrimaryImageURL, // If you join with a photos table or fetch separately
+      };
+    });
+
+    res.status(200).json(formattedPets);
+
+  } catch (error) {
+    console.error("Error in handleGetAllPets controller:", error);
+    res.status(500).json({ message: "Failed to retrieve pets.", error: error.message });
+  }
 };
 
 /**

@@ -71,7 +71,6 @@ async function getAllPetsByOwnerId(PetOwnerID) {
         SELECT *
         FROM ${TABLE_NAME}
         WHERE PetOwnerID = ?
-        ORDER BY CreatedAt DESC
         `,
       [PetOwnerID]
     );

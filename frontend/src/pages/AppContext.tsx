@@ -1,30 +1,37 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+// frontend/src/contexts/AppContext.tsx
+import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
+import { getPetsForCurrentUser } from '../lib/petApiService'; // Ensure this path is correct
 
+// Ideally, these interfaces would live in a shared types file (e.g., frontend/src/types/index.ts)
 interface User {
   userType: string;
-  userId: string;
+  userId: number;
   firstName: string;
   lastName: string;
   email: string;
-  petOwnerId?: string; // optional, only exists if userType === "PetOwner"
+  petOwnerId?: string;
 }
 
 interface Pet {
   id: number;
+  petOwnerID: string;
   name: string;
-  species: string;
-  breed: string;
-  age: number;
-  weight: string;
-  image: string;
-  description: string;
-  medicalHistory: string[];
-  vaccinations: {
+  dateOfBirth: string;
+  species?: string;
+  breed?: string;
+  sex: 'Female' | 'Male' | 'Other';
+  weight?: number;
+  age?: number; 
+  imageUrl?: string;
+  description?: string;
+  medicalHistory?: string[];
+  vaccinations?: {
     name: string;
     date: string;
     nextDue: string;
   }[];
 }
+
 interface Appointment {
   id: number;
   title: string;
@@ -42,7 +49,9 @@ interface AppContextType {
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   pets: Pet[];
-  setPets: React.Dispatch<React.SetStateAction<Pet[]>>;
+  isLoadingPets: boolean;
+  fetchPetsError: string | null;
+  fetchAllPetsByOwnerId: () => Promise<void>; 
   appointments: Appointment[];
   setAppointments: React.Dispatch<React.SetStateAction<Appointment[]>>;
 }
@@ -51,9 +60,12 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-    const [pets, setPets] = useState<Pet[]>([]);
+  const [pets, setPets] = useState<Pet[]>([]);
+  const [isLoadingPets, setIsLoadingPets] = useState<boolean>(false);
+  const [fetchPetsError, setFetchPetsError] = useState<string | null>(null);
   
-    const [appointments, setAppointments] = useState<Appointment[]>([
+  const [appointments, setAppointments] = useState<Appointment[]>([
+      // Your initial appointments data...
       {
         id: 1,
         title: "Vet Check-up",
@@ -66,104 +78,105 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         remind: true,
         link: "https://www.happypaws.com",
       },
-      {
-        id: 2,
-        title: "Grooming",
-        subtitle: "Full grooming package",
-        date: "2025-04-13",
-        time: "14:00",
-        location: "Pet Spa & Salon",
-        category: "Grooming",
-        completed: false,
-        remind: false,
-        link: "https://www.nonogrooming.com",
-      },
-      {
-        id: 3,
-        title: "Dental Cleaning",
-        subtitle: "Teeth scaling and polishing",
-        date: "2025-04-22",
-        time: "09:00",
-        location: "Bright Smile Pet Clinic",
-        category: "Clinic Visit",
-        completed: false,
-        remind: true,
-        link: "https://brightnshinepetdental.com",
-      },
-      {
-        id: 4,
-        title: "Deworming",
-        subtitle: "Routine deworming",
-        date: "2025-04-10",
-        time: "13:30",
-        location: "Pet Health Center",
-        category: "Vaccination",
-        completed: false,
-        remind: false,
-        link: "https://westernu.az1.qualtrics.com/jfe/form/SV_b7KPrqQLzfFLTZc",
-      },
-      {
-        id: 5,
-        title: "Ear Cleaning",
-        subtitle: "Grooming for ear hygiene",
-        date: "2025-04-18",
-        time: "15:30",
-        location: "Cozy Paws Spa",
-        category: "Grooming",
-        completed: false,
-        remind: true,
-        link: "",
-      },
-      {
-        id: 6,
-        title: "Follow-up Check",
-        subtitle: "Review of prior surgery",
-        date: "2025-04-25",
-        time: "11:00",
-        location: "Veterinary Surgical Center",
-        category: "Clinic Visit",
-        completed: false,
-        remind: true,
-        link: "https://pomonavalleyveterinaryhospital.com/appointments/",
-      },
-    ]);
+      // ... other appointment objects
+  ]);
 
-    useEffect(() => {
-  const token = localStorage.getItem("token");
-  if (!token) return;
-
-  const fetchUser = async () => {
+  const fetchAllPetsByOwnerId = useCallback(async () => {
+    setIsLoadingPets(true);
+    setFetchPetsError(null);
     try {
-      const res = await fetch("http://localhost:4350/api/users/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const fetchedApiPets = await getPetsForCurrentUser();
+      const processedPets: Pet[] = fetchedApiPets.map(apiPet => {
+        const birthDate = new Date(apiPet.dateOfBirth);
+        const ageDiffMs = Date.now() - birthDate.getTime();
+        const ageDate = new Date(ageDiffMs);
+        const calculatedAge = Math.abs(ageDate.getUTCFullYear() - 1970);
+        
+        return {
+          id: apiPet.id,
+          petOwnerID: apiPet.petOwnerID,
+          name: apiPet.name,
+          dateOfBirth: apiPet.dateOfBirth,
+          species: apiPet.species,
+          breed: apiPet.breed,
+          sex: apiPet.sex,
+          weight: apiPet.weight,
+          age: calculatedAge,
+          imageUrl: apiPet.imageUrl,
+          description: apiPet.description,
+          medicalHistory: apiPet.medicalHistory,
+          vaccinations: apiPet.vaccinations,
+        };
       });
-      if (!res.ok) throw new Error("Failed to fetch user info");
-      const data = await res.json();
-
-      setUser({
-        userId: data.userId,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        userType: data.userType,
-        petOwnerId: data.petOwnerId || undefined,
-      });
-    } catch (error) {
-      console.error("Error fetching user:", error);
+      setPets(processedPets);
+    } catch (error: any) {
+      console.error("Error fetching pets:", error);
+      setFetchPetsError(error.message || "An unknown error occurred while fetching pets.");
+      setPets([]);
+    } finally {
+      setIsLoadingPets(false);
     }
-  };
+  }, []); // Empty dependency array is fine as setters are stable.
 
-  fetchUser();
-}, []);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setUser(null);
+      setPets([]);
+      return;
+    }
 
-    return (
-      <AppContext.Provider value={{ user, setUser, pets, setPets, appointments, setAppointments }}>
-        {children}
-      </AppContext.Provider>
-    );
-  };  
+    const fetchInitialUserData = async () => {
+      try {
+        const res = await fetch("http://localhost:4350/api/users/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(`Failed to fetch user info: ${res.status} ${errorText}`);
+        }
+        const data = await res.json();
+        const currentUser: User = {
+          userId: data.userId,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          userType: data.userType,
+          petOwnerId: data.petOwnerId || undefined,
+        };
+        setUser(currentUser);
+
+        if (currentUser.userType === 'PetOwner') {
+          fetchAllPetsByOwnerId();
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        setUser(null);
+        setPets([]);
+        localStorage.removeItem("token");
+      }
+    };
+    fetchInitialUserData();
+  }, [fetchAllPetsByOwnerId]);
+
+  return (
+    <AppContext.Provider value={{ 
+      user, 
+      setUser, 
+      pets, 
+      isLoadingPets, 
+      fetchPetsError, 
+      fetchAllPetsByOwnerId,
+      appointments, 
+      setAppointments 
+    }}>
+      {children}
+    </AppContext.Provider>
+  );
+};  
 
 export const useAppContext = () => {
   const context = useContext(AppContext);
