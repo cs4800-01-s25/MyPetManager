@@ -8,17 +8,18 @@
 const argon2 = require("argon2");
 const jwt = require("jsonwebtoken");
 const { createUser, findUserByEmail, userExistsByEmail } = require("../models/user.model");
+const { createPetOwner } = require("../models/petOwner.model");
 require("../../loadEnv"); // load environment variables from .env file
 
 /**
  * Hashes the password and creates a new user in the database.
  */
 const handleSignup = async (req, res) => {
-  const { email, password } = req.body;
+  const {firstName, lastName, email, password } = req.body;
   console.log("Controller: user submitted email: " + email);
 
-  // added backend to check if email and password are being passed
-  if (!email || !password) {
+  // added backend to check if all fields are being passed
+  if (!firstName || !lastName || !email || !password) {
     return res.status(400).json({ message: "Email and password are required for signup" });
   }
 
@@ -32,11 +33,13 @@ const handleSignup = async (req, res) => {
     
   // Hash the password using argon2
     const hashedPassword = await argon2.hash(password);
-      console.log("Controlker: Password hashed for email: ${email}");
+    console.log("Controller: Password hashed for email: " + email);
 
     // Store the user in the database
-    await createUser(email, hashedPassword);
-    console.log("Controller: User Created sucessfully for email: ${email}")
+    const createdUserID = await createUser(firstName, lastName, email, hashedPassword);
+    console.log("Controller Creating PetOwner with UserID: " + createdUserID);
+    await createPetOwner(createdUserID);
+    console.log("Controller: User Created sucessfully for email: " + email)
 
     res.status(201).json({ message: "User created successfully" });
   } catch (error) {

@@ -18,6 +18,8 @@ import { AdminLayout } from "./layouts/AdminLayout";
 import { MyPetProfile } from "./pages/MyPetProfile";
 import { MainDashboard} from "./pages/MainDashboard";
 
+import Profile from './pages/Profile';
+
 
 const router = createBrowserRouter([
   {
@@ -68,6 +70,10 @@ const router = createBrowserRouter([
     path: "/admin/appointments",
     element: <AdminLayout currentPath="/admin/appointments"><Scheduler /></AdminLayout>,
   },    
+  {
+    path: "/admin/profile",
+    element: <AdminLayout currentPath="/admin/profile"><Profile /></AdminLayout>,
+  },   
 ]);
 
 createRoot(document.getElementById("app") as HTMLElement).render(
