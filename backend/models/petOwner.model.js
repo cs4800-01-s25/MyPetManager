@@ -81,7 +81,30 @@ async function findPetOwnerByUserById(userId) {
   }
 }
 
+/**
+ * Retrieves the PetOwnerID associated with a given UserID.
+ * @param {number} userId - The ID of the user.
+ * @returns {Promise<{ PetOwnerID: string } | null>} The PetOwnerID record or null if not found.
+ */
+async function getPetOwnerIDByUserId(userId) {
+  try {
+    const [rows] = await pool.query(
+      `
+      SELECT ${PRIMARY_KEY}
+      FROM ${TABLE_NAME}
+      WHERE UserID = ?
+      LIMIT 1
+    `,
+      [userId]
+    );
+    return rows.length > 0 ? rows[0] : null;
+  } catch (error) {
+    console.error("Error finding pet owner by UserID:", error);
+    throw new Error("Database error while fetching pet owner profile.");
+  }
+}
 module.exports = {
   findPetOwnerByUserById,
   createPetOwner,
+  getPetOwnerIDByUserId,
 };

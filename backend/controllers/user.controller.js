@@ -57,6 +57,39 @@ const getDashboardData = async (req, res) => {
     }
 };
 
+/**
+ * GET CURRENT INFO FOR LOGGED IN USER
+ */
+const getCurrentUser = async (req, res) => {
+  const { userId } = req.user;
+
+  try {
+    const user = await getUserPublicDataById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    let petOwnerId = null;
+    if (user.UserType === "PetOwner") {
+      const petOwner = await findPetOwnerByUserById(userId);
+      petOwnerId = petOwner?.PetOwnerID || null;
+    }
+
+    res.status(200).json({
+      userId: user.UserID,
+      firstName: user.FirstName,
+      lastName: user.LastName,
+      email: user.Email,
+      userType: user.UserType,
+      petOwnerId: petOwnerId,
+    });
+  } catch (error) {
+    console.error("Error fetching current user:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 module.exports = {
-    getDashboardData, 
+  getDashboardData,
+  getCurrentUser,
 };

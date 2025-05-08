@@ -1,4 +1,13 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+
+interface User {
+  userType: string;
+  userId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+
+}
 
 interface Pet {
   id: number;
@@ -30,7 +39,9 @@ interface Appointment {
 }
 
 interface AppContextType {
-  pets: any[];
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  pets: Pet[];
   setPets: React.Dispatch<React.SetStateAction<Pet[]>>;
   appointments: Appointment[];
   setAppointments: React.Dispatch<React.SetStateAction<Appointment[]>>;
@@ -39,6 +50,7 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<User | null>(null);
     const [pets, setPets] = useState<Pet[]>([]);
   
     const [appointments, setAppointments] = useState<Appointment[]>([
@@ -115,9 +127,31 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         link: "https://pomonavalleyveterinaryhospital.com/appointments/",
       },
     ]);
-  
+
+    useEffect(() => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const fetchUser = async () => {
+        try {
+          const res = await fetch("http://localhost:4350/api/users/me", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          if (!res.ok) throw new Error("Failed to fetch user info");
+          const data = await res.json();
+          setUser(data);
+        } catch (error) {
+          console.error("Failed to fetch user:", error);
+        }
+      };
+
+      fetchUser();
+    }, []);
+
     return (
-      <AppContext.Provider value={{ pets, setPets, appointments, setAppointments }}>
+      <AppContext.Provider value={{ user, setUser, pets, setPets, appointments, setAppointments }}>
         {children}
       </AppContext.Provider>
     );

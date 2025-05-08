@@ -6,7 +6,10 @@
 
 const express = require("express");
 const router = express.Router();
-const { getDashboardData } = require("../controllers/user.controller");
+const {
+  getDashboardData,
+  getCurrentUser,
+} = require("../controllers/user.controller");
 const { authenticateToken } = require('../middleware/auth.middleware');
 
 // full route is /api/users/..
@@ -14,6 +17,7 @@ const { authenticateToken } = require('../middleware/auth.middleware');
 // api/users/dashboard, frontend serves webiste/dashboard, hides the userid
 router.get('/dashboard', authenticateToken, getDashboardData); 
 
+router.get("/me", authenticateToken, getCurrentUser); 
 // future get profile data 
 // router.get('/profile', authenticateToken, getProfileData);
 

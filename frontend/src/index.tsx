@@ -17,6 +17,7 @@ import Dashboard from "./pages/Dashboard";
 import { AdminLayout } from "./layouts/AdminLayout"; 
 import { MyPetProfile } from "./pages/MyPetProfile";
 import { MainDashboard} from "./pages/MainDashboard";
+import { PetOwnerLayout} from "./layouts/PetOwnerLayout"; 
 
 import Profile from './pages/Profile';
 
@@ -44,7 +45,10 @@ const router = createBrowserRouter([
   },
   {
     path: "/mainDashboard",
-    element: <RootLayout><MainDashboard /></RootLayout>,
+    element: (
+      <PetOwnerLayout> <MainDashboard />
+      </PetOwnerLayout>
+    )
   },
   {
     path: "/dashboard",
